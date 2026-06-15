@@ -1,0 +1,216 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 3670601847402496,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "displayMode": "list"
+        }
+      },
+      "targets": [
+        {
+          "expr": "avg_over_time(shared_whatsapp_train_accuracy{job=~\".*\"}[$__interval])",
+          "legendFormat": "train accuracy"
+        },
+        {
+          "expr": "avg_over_time(shared_whatsapp_val_accuracy{job=~\".*\"}[$__interval])",
+          "legendFormat": "val accuracy"
+        }
+      ],
+      "title": "Acurácia (treino vs validação)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "displayMode": "list"
+        }
+      },
+      "targets": [
+        {
+          "expr": "avg_over_time(shared_whatsapp_train_loss{job=~\".*\"}[$__interval])",
+          "legendFormat": "train loss"
+        },
+        {
+          "expr": "avg_over_time(shared_whatsapp_val_loss{job=~\".*\"}[$__interval])",
+          "legendFormat": "val loss"
+        }
+      ],
+      "title": "Loss (treino vs validação)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 8
+      },
+      "id": 3,
+      "options": {},
+      "targets": [
+        {
+          "expr": "rate(shared_whatsapp_inference_requests_total[1m])",
+          "legendFormat": "throughput (req/s)"
+        }
+      ],
+      "title": "Throughput (req/s)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 8
+      },
+      "id": 4,
+      "options": {},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(shared_whatsapp_latency_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95 latency(s)"
+        }
+      ],
+      "title": "Latência (p95)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 16,
+        "y": 8
+      },
+      "id": 5,
+      "options": {
+        "orientation": "auto"
+      },
+      "targets": [
+        {
+          "expr": "last_over_time(shared_whatsapp_val_accuracy[1h])",
+          "legendFormat": "val accuracy (last)"
+        }
+      ],
+      "title": "Acurácia atual (val)",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 22,
+        "y": 8
+      },
+      "id": 6,
+      "options": {},
+      "targets": [
+        {
+          "expr": "shared_whatsapp_indexed_documents_total",
+          "legendFormat": "docs indexed"
+        }
+      ],
+      "title": "Documentos indexados",
+      "type": "gauge"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 7,
+      "options": {},
+      "targets": [
+        {
+          "expr": "max by (model) (shared_whatsapp_model_loaded{job=~\".*\"})",
+          "legendFormat": "model loaded"
+        },
+        {
+          "expr": "avg by (model) (rate(shared_whatsapp_inference_requests_total[5m]))",
+          "legendFormat": "req/s by model"
+        }
+      ],
+      "title": "Modelos carregados e requisições por modelo",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [
+    "shared",
+    "whatsapp",
+    "training"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Eddie_whatsapp - Training & Performance",
+  "uid": "shared-whatsapp-training",
+  "version": 2
+}

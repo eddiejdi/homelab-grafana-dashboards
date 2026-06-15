@@ -1,0 +1,873 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "description": "Monitoramento do self-heal do Storj Storage Node — QUIC, porta, address drift, falhas e histórico.",
+  "editable": true,
+  "id": 3670601973231616,
+  "links": [
+    {
+      "icon": "external link",
+      "title": "Storj Node",
+      "type": "link",
+      "url": "/d/storj-node-v1/storj-storage-node"
+    }
+  ],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "panels": [],
+      "title": "🛡️ Self-Heal — Status Geral",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "color": "red",
+                "index": 0,
+                "text": "UNHEALTHY"
+              },
+              "type": "value",
+              "value": "0"
+            },
+            {
+              "options": {
+                "color": "green",
+                "index": 1,
+                "text": "HEALTHY"
+              },
+              "type": "value",
+              "value": "1"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_health{name=\"storagenode\"}",
+          "instant": true,
+          "legendFormat": ""
+        }
+      ],
+      "title": "Saúde Geral",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "color": "red",
+                "index": 0,
+                "text": "NÃO"
+              },
+              "type": "value",
+              "value": "0"
+            },
+            {
+              "options": {
+                "color": "green",
+                "index": 1,
+                "text": "SIM"
+              },
+              "type": "value",
+              "value": "1"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_api_up{name=\"storagenode\"}",
+          "instant": true,
+          "legendFormat": ""
+        }
+      ],
+      "title": "API Up",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "color": "red",
+                "index": 0,
+                "text": "NÃO"
+              },
+              "type": "value",
+              "value": "0"
+            },
+            {
+              "options": {
+                "color": "green",
+                "index": 1,
+                "text": "SIM"
+              },
+              "type": "value",
+              "value": "1"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_quic_ok{name=\"storagenode\"}",
+          "instant": true,
+          "legendFormat": ""
+        }
+      ],
+      "title": "QUIC OK",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "color": "red",
+                "index": 0,
+                "text": "NÃO"
+              },
+              "type": "value",
+              "value": "0"
+            },
+            {
+              "options": {
+                "color": "green",
+                "index": 1,
+                "text": "SIM"
+              },
+              "type": "value",
+              "value": "1"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_port_open{name=\"storagenode\"}",
+          "instant": true,
+          "legendFormat": ""
+        }
+      ],
+      "title": "Porta Aberta",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "color": "red",
+                "index": 0,
+                "text": "DRIFT"
+              },
+              "type": "value",
+              "value": "1"
+            },
+            {
+              "options": {
+                "color": "green",
+                "index": 1,
+                "text": "OK"
+              },
+              "type": "value",
+              "value": "0"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_address_drift{name=\"storagenode\"}",
+          "instant": true,
+          "legendFormat": ""
+        }
+      ],
+      "title": "Addr Drift",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "color": "red",
+                "index": 0,
+                "text": "NÃO"
+              },
+              "type": "value",
+              "value": "0"
+            },
+            {
+              "options": {
+                "color": "green",
+                "index": 1,
+                "text": "SIM"
+              },
+              "type": "value",
+              "value": "1"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_api_external_address_ok{name=\"storagenode\"}",
+          "instant": true,
+          "legendFormat": ""
+        }
+      ],
+      "title": "Endereço Externo OK",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 5
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_consecutive_failures{name=\"storagenode\"}",
+          "instant": true,
+          "legendFormat": "falhas"
+        }
+      ],
+      "title": "Falhas Consecutivas",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 300
+              },
+              {
+                "color": "red",
+                "value": 600
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 5
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_last_ping_age_seconds{name=\"storagenode\"}",
+          "instant": true,
+          "legendFormat": "ping age"
+        }
+      ],
+      "title": "Último Ping (há quanto tempo)",
+      "type": "stat"
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 12,
+        "y": 5
+      },
+      "id": 10,
+      "options": {
+        "content": "Use **:9213/status** para ver `expected_external_address` e `container_address` em tempo real.",
+        "mode": "markdown"
+      },
+      "title": "Endereço Anunciado",
+      "type": "text"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 11,
+      "panels": [],
+      "title": "📈 Histórico Self-Heal",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 8,
+            "lineWidth": 2
+          },
+          "max": 1.2,
+          "min": -0.1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 14,
+        "x": 0,
+        "y": 10
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_health{name=\"storagenode\"}",
+          "legendFormat": "saúde geral"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_quic_ok{name=\"storagenode\"}",
+          "legendFormat": "quic ok"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_port_open{name=\"storagenode\"}",
+          "legendFormat": "porta aberta"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_api_up{name=\"storagenode\"}",
+          "legendFormat": "api up"
+        }
+      ],
+      "title": "Saúde do Nó (histórico)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 8,
+            "lineWidth": 2
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 10,
+        "x": 14,
+        "y": 10
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_consecutive_failures{name=\"storagenode\"}",
+          "legendFormat": "falhas consecutivas"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_last_ping_age_seconds{name=\"storagenode\"} / 60",
+          "legendFormat": "ping age (min)"
+        }
+      ],
+      "title": "Falhas Consecutivas e Ping Age",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 20,
+            "lineWidth": 2
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "address drift"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "storj_node_address_drift{name=\"storagenode\"}",
+          "legendFormat": "address drift"
+        }
+      ],
+      "title": "Drift de Endereço",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": [
+    "storj",
+    "selfheal",
+    "infra"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Storj Self-Heal Monitor",
+  "uid": "storj-selfheal-v1",
+  "version": 2
+}

@@ -1,0 +1,93 @@
+name: Deploy Grafana Dashboards
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dashboards/**'
+      - 'provisioning/**'
+  workflow_dispatch:
+    inputs:
+      full_sync:
+        description: "Sync completo (incluindo remoção de arquivos ausentes)"
+        required: false
+        default: "false"
+
+jobs:
+  deploy:
+    runs-on:
+      - self-hosted
+      - linux
+      - homelab-only
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Sync dashboards → provisioning
+        run: |
+          set -euo pipefail
+
+          DEST=/home/homelab/monitoring/grafana/provisioning/dashboards
+          SRC=$GITHUB_WORKSPACE/dashboards
+
+          echo "==> Sincronizando dashboards de $SRC → $DEST"
+
+          # Criar subpastas por categoria se não existirem
+          for cat in trading infrastructure storage agents security; do
+            mkdir -p "$DEST/$cat"
+          done
+
+          # Flags de rsync
+          RSYNC_FLAGS="-av --checksum --backup --backup-dir=$DEST/.bak-$(date +%Y%m%d_%H%M%S)"
+          if [ "${{ github.event.inputs.full_sync }}" = "true" ]; then
+            RSYNC_FLAGS="$RSYNC_FLAGS --delete"
+            echo "==> Modo full_sync ativado: arquivos removidos do repo serão deletados do servidor"
+          fi
+
+          rsync $RSYNC_FLAGS "$SRC/" "$DEST/"
+
+          echo "==> Sync concluído"
+          echo "Dashboards por categoria:"
+          for cat in trading infrastructure storage agents security; do
+            count=$(ls "$DEST/$cat"/*.json 2>/dev/null | wc -l)
+            echo "  $cat: $count arquivos"
+          done
+
+      - name: Sync provisioning config
+        run: |
+          set -euo pipefail
+          DEST=/home/homelab/monitoring/grafana/provisioning
+          SRC=$GITHUB_WORKSPACE/provisioning
+
+          rsync -av --checksum "$SRC/dashboards.yml" "$DEST/dashboards/"
+          echo "==> provisioning/dashboards.yml atualizado"
+
+      - name: Aguardar reload do Grafana (30s poll)
+        run: |
+          echo "==> Grafana recarrega automaticamente em até 30s"
+          sleep 32
+          # Verificar health do Grafana
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            --max-time 5 http://localhost:3000/api/health 2>/dev/null || echo "000")
+          if [ "$STATUS" = "200" ]; then
+            echo "✅ Grafana respondeu (HTTP $STATUS)"
+          else
+            echo "⚠️  Grafana retornou HTTP $STATUS — verificar logs"
+            docker logs grafana --tail 20 2>/dev/null || true
+          fi
+
+      - name: Resumo do deploy
+        run: |
+          echo "=============================="
+          echo " Deploy concluído"
+          echo " Branch : $GITHUB_REF_NAME"
+          echo " Commit : $GITHUB_SHA"
+          echo " Hora   : $(date '+%Y-%m-%d %H:%M:%S %Z')"
+          echo "=============================="
+          echo "Dashboards deployados:"
+          find /home/homelab/monitoring/grafana/provisioning/dashboards \
+            -name "*.json" ! -path "*/.bak*" | sort | sed 's|.*/dashboards/||'

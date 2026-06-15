@@ -1,0 +1,63 @@
+name: Validate Dashboards
+
+on:
+  pull_request:
+    paths:
+      - 'dashboards/**'
+      - 'provisioning/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON syntax
+        run: |
+          set -e
+          ERRORS=0
+          for f in $(find dashboards -name "*.json"); do
+            if python3 -c "import json,sys; json.load(open('$f'))" 2>/dev/null; then
+              echo "✅ $f"
+            else
+              echo "❌ JSON inválido: $f"
+              ERRORS=$((ERRORS+1))
+            fi
+          done
+          [ $ERRORS -eq 0 ] || exit 1
+
+      - name: Check required Grafana fields
+        run: |
+          python3 << 'PYEOF'
+          import json, os, sys
+          errors = []
+          for root, _, files in os.walk("dashboards"):
+              for f in files:
+                  if not f.endswith(".json"):
+                      continue
+                  path = os.path.join(root, f)
+                  try:
+                      d = json.load(open(path))
+                  except Exception as e:
+                      errors.append(f"{path}: JSON parse error: {e}")
+                      continue
+                  if "panels" not in d and "title" not in d:
+                      errors.append(f"{path}: não parece ser um dashboard Grafana (sem 'panels' nem 'title')")
+          if errors:
+              for e in errors:
+                  print(f"❌ {e}")
+              sys.exit(1)
+          print(f"✅ {sum(len(fs) for _,_,fs in os.walk('dashboards'))} dashboards validados")
+          PYEOF
+
+      - name: Dashboard count summary
+        run: |
+          echo "### Dashboard Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          for cat in trading infrastructure storage agents security; do
+            count=$(find dashboards/$cat -name "*.json" 2>/dev/null | wc -l)
+            echo "- **$cat**: $count" >> $GITHUB_STEP_SUMMARY
+          done
+          total=$(find dashboards -name "*.json" | wc -l)
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Total: $total dashboards**" >> $GITHUB_STEP_SUMMARY

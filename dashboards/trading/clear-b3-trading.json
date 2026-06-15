@@ -1,0 +1,1411 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Dashboard do agente de trading B3 (Clear/MT5) — métricas de operação, PnL, Market RAG e guardrails fiscais",
+  "id": 3670601436360704,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 100,
+      "title": "📊 OPERAÇÃO",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "currencyBRL"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "clear_last_price{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Preço",
+          "refId": "A"
+        }
+      ],
+      "title": "💰 Último Preço",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "currencyBRL"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "clear_pnl_total{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "PnL Total",
+          "refId": "A"
+        }
+      ],
+      "title": "📈 PnL Total",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "currencyBRL"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "clear_pnl_24h{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "PnL 24h",
+          "refId": "A"
+        }
+      ],
+      "title": "📊 PnL 24h",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.4
+              },
+              {
+                "color": "green",
+                "value": 0.55
+              }
+            ]
+          },
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "expr": "clear_win_rate{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Win Rate",
+          "refId": "A"
+        }
+      ],
+      "title": "🎯 Win Rate",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "clear_trades_total{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Total",
+          "refId": "A"
+        }
+      ],
+      "title": "🔢 Trades Total",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "clear_trades_24h{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "24h",
+          "refId": "A"
+        }
+      ],
+      "title": "⏱️ Trades 24h",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "R$",
+            "fillOpacity": 10,
+            "gradientMode": "scheme",
+            "lineWidth": 2,
+            "showPoints": "never"
+          },
+          "decimals": 2,
+          "unit": "currencyBRL"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "expr": "clear_last_price{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "{{symbol}} R$",
+          "refId": "A"
+        }
+      ],
+      "title": "📈 Preço ao Longo do Tempo",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 15,
+            "gradientMode": "scheme",
+            "lineWidth": 2,
+            "showPoints": "never"
+          },
+          "decimals": 2,
+          "unit": "currencyBRL"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 5
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "clear_pnl_total{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "PnL Total",
+          "refId": "A"
+        },
+        {
+          "expr": "clear_pnl_24h{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "PnL 24h",
+          "refId": "B"
+        }
+      ],
+      "title": "📊 PnL ao Longo do Tempo",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 200,
+      "title": "🧠 MARKET RAG / IA",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "-1": {
+                  "color": "red",
+                  "text": "🐻 BEARISH"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "0": {
+                  "color": "yellow",
+                  "text": "↔️ RANGING"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "1": {
+                  "color": "green",
+                  "text": "🐂 BULLISH"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 14
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "clear_rag_regime{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Regime",
+          "refId": "A"
+        }
+      ],
+      "title": "📊 Regime de Mercado",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 1,
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.5
+              },
+              {
+                "color": "green",
+                "value": 0.75
+              }
+            ]
+          },
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 14
+      },
+      "id": 10,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showThresholdMarkers": true
+      },
+      "targets": [
+        {
+          "expr": "clear_rag_confidence{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Confidence",
+          "refId": "A"
+        }
+      ],
+      "title": "🎯 Confiança do Regime",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.015
+              },
+              {
+                "color": "green",
+                "value": 0.025
+              }
+            ]
+          },
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 14
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "clear_ai_take_profit_pct{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "TP %",
+          "refId": "A"
+        }
+      ],
+      "title": "🎯 Take-Profit Dinâmico",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 300,
+      "title": "🏛️ GUARDRAILS FISCAIS",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "max": 20000,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 14000
+              },
+              {
+                "color": "orange",
+                "value": 16000
+              },
+              {
+                "color": "red",
+                "value": 18000
+              }
+            ]
+          },
+          "unit": "currencyBRL"
+        }
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 19
+      },
+      "id": 12,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true,
+        "text": {
+          "titleSize": 14,
+          "valueSize": 28
+        }
+      },
+      "targets": [
+        {
+          "expr": "clear_tax_equity_swing_sales_brl{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Vendas Mês",
+          "refId": "A"
+        }
+      ],
+      "title": "💳 Vendas Swing Mês (R$20k)",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 2000
+              },
+              {
+                "color": "#EAB839",
+                "value": 5000
+              },
+              {
+                "color": "green",
+                "value": 10000
+              }
+            ]
+          },
+          "unit": "currencyBRL"
+        }
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 6,
+        "y": 19
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "clear_tax_equity_swing_remaining_brl{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Restante",
+          "refId": "A"
+        }
+      ],
+      "title": "🟢 Headroom Isenção",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "text": "❌ TRIBUTADO"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "1": {
+                  "color": "green",
+                  "text": "✅ ISENTO"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 9,
+        "y": 19
+      },
+      "id": 14,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "clear_tax_equity_swing_exempt{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Isenção",
+          "refId": "A"
+        }
+      ],
+      "title": "🛡️ Status Isenção",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 10
+              },
+              {
+                "color": "red",
+                "value": 100
+              }
+            ]
+          },
+          "unit": "currencyBRL"
+        }
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 6,
+        "y": 22
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "clear_tax_due_brl{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "DARF",
+          "refId": "A"
+        }
+      ],
+      "title": "🧾 DARF Estimada",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 4,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "currencyBRL"
+        }
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 9,
+        "y": 22
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "clear_tax_irrf_brl{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "IRRF",
+          "refId": "A"
+        }
+      ],
+      "title": "📑 IRRF Retido",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "gradientMode": "none"
+          },
+          "decimals": 2,
+          "unit": "currencyBRL"
+        }
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 12,
+        "y": 19
+      },
+      "id": 17,
+      "options": {
+        "barWidth": 0.7,
+        "groupWidth": 0.7,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "horizontal",
+        "showValue": "always",
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "clear_tax_pnl_equity_swing_brl{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Ações Swing",
+          "refId": "A"
+        },
+        {
+          "expr": "clear_tax_pnl_equity_daytrade_brl{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Ações Day Trade",
+          "refId": "B"
+        },
+        {
+          "expr": "clear_tax_pnl_futures_swing_brl{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Futuros Swing",
+          "refId": "C"
+        },
+        {
+          "expr": "clear_tax_pnl_futures_daytrade_brl{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Futuros Day Trade",
+          "refId": "D"
+        }
+      ],
+      "title": "📊 PnL por Categoria Fiscal",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 80
+          },
+          "decimals": 2,
+          "unit": "currencyBRL"
+        }
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 19
+      },
+      "id": 18,
+      "options": {
+        "barWidth": 0.7,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "horizontal",
+        "showValue": "always",
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "clear_tax_loss_accumulated_brl{symbol=\"$symbol\",profile=~\"$profile\",category=\"equity_swing\"}",
+          "legendFormat": "Ações Swing",
+          "refId": "A"
+        },
+        {
+          "expr": "clear_tax_loss_accumulated_brl{symbol=\"$symbol\",profile=~\"$profile\",category=\"equity_daytrade\"}",
+          "legendFormat": "Ações Day Trade",
+          "refId": "B"
+        },
+        {
+          "expr": "clear_tax_loss_accumulated_brl{symbol=\"$symbol\",profile=~\"$profile\",category=\"futures_swing\"}",
+          "legendFormat": "Futuros Swing",
+          "refId": "C"
+        },
+        {
+          "expr": "clear_tax_loss_accumulated_brl{symbol=\"$symbol\",profile=~\"$profile\",category=\"futures_daytrade\"}",
+          "legendFormat": "Futuros Day Trade",
+          "refId": "D"
+        }
+      ],
+      "title": "📉 Prejuízo Acumulado por Categoria",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 10,
+            "lineWidth": 2,
+            "showPoints": "never"
+          },
+          "decimals": 0,
+          "unit": "currencyBRL"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Limite R$18k"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    10,
+                    10
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Limite R$20k"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    5,
+                    5
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 25
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "clear_tax_equity_swing_sales_brl{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Vendas Swing",
+          "refId": "A"
+        },
+        {
+          "expr": "vector(18000)",
+          "legendFormat": "Limite R$18k",
+          "refId": "B"
+        },
+        {
+          "expr": "vector(20000)",
+          "legendFormat": "Limite R$20k",
+          "refId": "C"
+        }
+      ],
+      "title": "📈 Vendas Swing vs Limite R$20k (Histórico)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 15,
+            "lineWidth": 2,
+            "showPoints": "never"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "DARF R$"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyBRL"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Eventos"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 30
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 25
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "clear_tax_due_brl{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "DARF R$",
+          "refId": "A"
+        },
+        {
+          "expr": "clear_tax_events_count{symbol=\"$symbol\",profile=~\"$profile\"}",
+          "legendFormat": "Eventos",
+          "refId": "B"
+        }
+      ],
+      "title": "📊 Eventos Fiscais e DARF (Histórico)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "15s",
+  "schemaVersion": 39,
+  "tags": [
+    "trading",
+    "b3",
+    "clear",
+    "mt5",
+    "tax"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "PETR4",
+          "value": "PETR4"
+        },
+        "label": "Símbolo",
+        "name": "symbol",
+        "options": [
+          {
+            "selected": true,
+            "text": "PETR4",
+            "value": "PETR4"
+          },
+          {
+            "text": "VALE3",
+            "value": "VALE3"
+          },
+          {
+            "text": "WINFUT",
+            "value": "WINFUT"
+          },
+          {
+            "text": "WDOFUT",
+            "value": "WDOFUT"
+          }
+        ],
+        "query": "PETR4,VALE3,WINFUT,WDOFUT",
+        "type": "custom"
+      },
+      {
+        "current": {
+          "text": "default",
+          "value": "default"
+        },
+        "label": "Profile",
+        "name": "profile",
+        "options": [
+          {
+            "selected": true,
+            "text": "default",
+            "value": "default"
+          },
+          {
+            "text": "conservative",
+            "value": "conservative"
+          },
+          {
+            "text": "aggressive",
+            "value": "aggressive"
+          }
+        ],
+        "query": "default,conservative,aggressive",
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "🏛️ Clear B3 Trading Agent",
+  "uid": "clear-b3-trading",
+  "version": 2
+}

@@ -1,0 +1,539 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 3670602669486080,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "green",
+                  "text": "✅ Healthy"
+                },
+                "1": {
+                  "color": "orange",
+                  "text": "⚠️ Stalled"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "max": 5,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 3
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 10,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "count(increase(selfhealing_restarts_total[5m])) > 0 or vector(0)",
+          "legendFormat": "Restarts (5m)",
+          "refId": "A"
+        },
+        {
+          "expr": "avg(time() - process_start_time_seconds) > 300 or vector(0)",
+          "legendFormat": "Stalled Services",
+          "refId": "B"
+        }
+      ],
+      "title": "🔧 Self-Healing Status (Stall > 300s)",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "color": "green",
+                  "text": "OK"
+                },
+                "to": 1
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "orange",
+                  "text": "HEALING"
+                },
+                "to": 2
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 2,
+                "result": {
+                  "color": "red",
+                  "text": "CRITICAL"
+                },
+                "to": 100
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 3
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "targets": [
+        {
+          "expr": "count(max_over_time((time() - process_start_time_seconds) > 300[5m])) by (job) or vector(0)",
+          "legendFormat": "{{job}}",
+          "refId": "A"
+        }
+      ],
+      "title": "📊 Service Stall History (5m)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "text": "🔴 FROZEN"
+                },
+                "1": {
+                  "color": "green",
+                  "text": "✅ OK"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 0.5
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 4
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "ollama_up or vector(0)",
+          "legendFormat": "Ollama Status",
+          "refId": "A"
+        },
+        {
+          "expr": "ollama_frozen_duration_seconds or vector(0)",
+          "legendFormat": "Frozen ({{ instance }})",
+          "refId": "B"
+        }
+      ],
+      "title": "🧊 Ollama Frozen Detection",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "color": "green",
+                  "text": "Fresh"
+                },
+                "to": 60
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 60,
+                "result": {
+                  "color": "orange",
+                  "text": "WARNING"
+                },
+                "to": 180
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 180,
+                "result": {
+                  "color": "red",
+                  "text": "CRITICAL"
+                },
+                "to": 9999999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 180
+              }
+            ]
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 4
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "targets": [
+        {
+          "expr": "ollama_frozen_duration_seconds or vector(0)",
+          "legendFormat": "{{ instance }}",
+          "refId": "A"
+        }
+      ],
+      "title": "⏱️ Ollama Frozen Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "color": "green",
+                  "text": "STABLE"
+                },
+                "to": 1
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "color": "orange",
+                  "text": "UNSTABLE"
+                },
+                "to": 2
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 3,
+                "result": {
+                  "color": "red",
+                  "text": "CRITICAL"
+                },
+                "to": 9999
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 3
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 4
+      },
+      "id": 14,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "targets": [
+        {
+          "expr": "increase(ollama_selfheal_restarts_total[1h]) or vector(0)",
+          "legendFormat": "Restarts",
+          "refId": "A"
+        }
+      ],
+      "title": "🔄 Ollama Auto-Restarts (1h)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 15,
+      "targets": [
+        {
+          "expr": "increase(ollama_selfheal_restarts_total[1h]) or vector(0)",
+          "legendFormat": "valor",
+          "refId": "A"
+        }
+      ],
+      "title": "Ollama Recovery Events (1h)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 1,
+      "targets": [
+        {
+          "expr": "up{job=~\"jira-worker|jira.*\"} or vector(0)",
+          "legendFormat": "valor",
+          "refId": "A"
+        }
+      ],
+      "title": "Jira Worker Health (fallback)",
+      "type": "stat"
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 2,
+      "options": {
+        "content": "**Painel com Self-Healing Automático (Serviços + Ollama)**\n\n**Gauges Serviços**:\n- 🔧 Self-Healing Status: monitora stalls > 300s em jira-worker + crypto-agents\n- 📊 Service Stall History: histórico 5m com status OK/HEALING/CRITICAL\n\n**Gauges Ollama (NEW)**:\n- 🧊 Ollama Frozen Detection: status verde (OK) ou vermelho (FROZEN)\n- ⏱️ Ollama Frozen Duration: tempo desde último request bem-sucedido\n- 🔄 Ollama Auto-Restarts: contador de restarts automáticos/hora (max 3)\n\n**Self-Healing Policies**:\n- Serviços: 2 min de stall → restart automático\n- Ollama: 180s sem requisições E GPU < 5% → restart automático\n- Max restarts/hora: 3 (com cooldown 60s)\n- Failover: 2+ falhas consecutivas → escalação para admin\n\n**Logs**:\n- 🧊 Ollama: detectar congelamento, restarts, recuperação\n- 📋 Jira: integração RPA4ALL (últimas 6h)\n\nURL: https://grafana.rpa4all.com/d/shared-central/shared-auto-dev-e28094-central?orgId=1",
+        "mode": "markdown"
+      },
+      "title": "Fonte / Nota",
+      "type": "text"
+    }
+  ],
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [
+    "jira",
+    "central",
+    "ollama",
+    "selfhealing"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Shared Auto Dev - Central",
+  "uid": "shared-auto-dev-central",
+  "version": 2
+}

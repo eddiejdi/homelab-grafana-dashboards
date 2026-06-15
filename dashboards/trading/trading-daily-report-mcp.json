@@ -1,0 +1,919 @@
+{
+  "__elements": {},
+  "__inputs": [
+    {
+      "description": "",
+      "label": "BTC Trading PostgreSQL",
+      "name": "DS_BTC_TRADING_POSTGRESQL",
+      "pluginId": "grafana-postgresql-datasource",
+      "pluginName": "PostgreSQL",
+      "type": "datasource"
+    }
+  ],
+  "__requires": [
+    {
+      "id": "grafana",
+      "name": "Grafana",
+      "type": "grafana",
+      "version": "10.0.0"
+    },
+    {
+      "id": "grafana-postgresql-datasource",
+      "name": "PostgreSQL",
+      "type": "datasource",
+      "version": "1.0.0"
+    },
+    {
+      "id": "text",
+      "name": "Text",
+      "type": "panel",
+      "version": ""
+    },
+    {
+      "id": "barchart",
+      "name": "Bar chart",
+      "type": "panel",
+      "version": ""
+    },
+    {
+      "id": "table",
+      "name": "Table",
+      "type": "panel",
+      "version": ""
+    },
+    {
+      "id": "piechart",
+      "name": "Pie chart",
+      "type": "panel",
+      "version": ""
+    },
+    {
+      "id": "timeseries",
+      "name": "Time series",
+      "type": "panel",
+      "version": ""
+    },
+    {
+      "id": "stat",
+      "name": "Stat",
+      "type": "panel",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      },
+      {
+        "datasource": {
+          "type": "grafana-postgresql-datasource",
+          "uid": "btc-trading-pg"
+        },
+        "enable": true,
+        "expr": "SELECT extract(epoch from created_at) * 1000 AS time, 'Novo Relatório' AS text, 'report' AS tags FROM btc.daily_reports ORDER BY created_at DESC",
+        "hide": false,
+        "iconColor": "blue",
+        "name": "Novos Relatórios",
+        "rawQuery": true,
+        "type": "alert"
+      }
+    ]
+  },
+  "description": "Relatório diário de trading gerado pelo Ollama Trading Analyst via MCP orchestration",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": 3670602778537984,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 10,
+      "title": "📊 Análise Diária — Ollama Trading Analyst",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "btc-trading-pg"
+      },
+      "description": "Último relatório gerado pelo Ollama Trading Analyst via MCP tools",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 14,
+        "x": 0,
+        "y": 1
+      },
+      "id": 1,
+      "options": {
+        "content": "",
+        "mode": "markdown"
+      },
+      "pluginVersion": "",
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "btc-trading-pg"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT report_text AS \"Análise LLM\", created_at AS \"Gerado em\", model_used AS \"Modelo\"\nFROM btc.daily_reports\nORDER BY created_at DESC\nLIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "🤖 Análise LLM — Último Relatório",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "format": "auto",
+            "keepTime": false
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "btc-trading-pg"
+      },
+      "description": "Status dos agentes e métricas do dia",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": -1
+              },
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 10,
+        "x": 14,
+        "y": 1
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "btc-trading-pg"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  ROUND(pnl_24h::numeric, 4) AS \"PnL 24h (USD)\"\nFROM btc.daily_reports\nORDER BY created_at DESC\nLIMIT 1",
+          "refId": "A"
+        }
+      ],
+      "title": "💰 PnL Realizado 24h",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "btc-trading-pg"
+      },
+      "description": "Histórico de relatórios diários — últimos 7 dias",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Data"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "PnL"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              },
+              {
+                "id": "custom.width",
+                "value": 90
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 10,
+        "x": 14,
+        "y": 5
+      },
+      "id": 6,
+      "options": {
+        "footer": {
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Data"
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "btc-trading-pg"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  to_char(report_date, 'DD/MM') AS \"Data\",\n  ROUND(pnl_24h::numeric, 4) AS \"PnL\",\n  model_used AS \"Modelo\",\n  to_char(created_at AT TIME ZONE 'America/Sao_Paulo', 'HH24:MI') AS \"Hora\"\nFROM btc.daily_reports\nORDER BY report_date DESC\nLIMIT 7",
+          "refId": "A"
+        }
+      ],
+      "title": "📅 Histórico de Relatórios (7 dias)",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "id": 20,
+      "title": "📈 Performance das Últimas 24h",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "btc-trading-pg"
+      },
+      "description": "PnL realizado por perfil nas últimas 24h",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 16
+      },
+      "id": 2,
+      "options": {
+        "barRadius": 0.1,
+        "barWidth": 0.6,
+        "groupWidth": 0.7,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "btc-trading-pg"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  profile AS \"Perfil\",\n  ROUND(SUM(CASE WHEN side='sell' THEN COALESCE(pnl,0) ELSE 0 END)::numeric, 4) AS \"PnL 24h (USD)\"\nFROM btc.trades\nWHERE dry_run = false\n  AND symbol = 'BTC-USDT'\n  AND to_timestamp(timestamp) >= NOW() - INTERVAL '24 hours'\nGROUP BY profile\nORDER BY profile",
+          "refId": "A"
+        }
+      ],
+      "title": "💹 PnL 24h por Perfil",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "btc-trading-pg"
+      },
+      "description": "Win vs Loss nas últimas 24h por perfil",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Wins"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#73BF69",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Losses"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#F2495C",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 8,
+        "y": 16
+      },
+      "id": 3,
+      "options": {
+        "displayLabels": [
+          "percent",
+          "value"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "btc-trading-pg"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  COUNT(CASE WHEN pnl > 0 THEN 1 END) AS \"Wins\",\n  COUNT(CASE WHEN pnl < 0 THEN 1 END) AS \"Losses\"\nFROM btc.trades\nWHERE dry_run = false\n  AND symbol = 'BTC-USDT'\n  AND side = 'sell'\n  AND to_timestamp(timestamp) >= NOW() - INTERVAL '24 hours'",
+          "refId": "A"
+        }
+      ],
+      "title": "🏆 Win/Loss 24h",
+      "type": "piechart"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "btc-trading-pg"
+      },
+      "description": "Últimas negociações reais das últimas 24h",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Side"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "buy": {
+                        "color": "green",
+                        "index": 0,
+                        "text": "🟢 BUY"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "sell": {
+                        "color": "red",
+                        "index": 1,
+                        "text": "🔴 SELL"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "PnL"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0.0001
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 9,
+        "x": 15,
+        "y": 16
+      },
+      "id": 4,
+      "options": {
+        "footer": {
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Hora"
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "btc-trading-pg"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  to_char(to_timestamp(timestamp) AT TIME ZONE 'America/Sao_Paulo', 'HH24:MI') AS \"Hora\",\n  profile AS \"Perfil\",\n  side AS \"Side\",\n  ROUND(price::numeric, 0) AS \"Preço\",\n  ROUND(size::numeric, 6) AS \"Size BTC\",\n  ROUND(COALESCE(pnl, 0)::numeric, 4) AS \"PnL\"\nFROM btc.trades\nWHERE dry_run = false\n  AND symbol = 'BTC-USDT'\n  AND to_timestamp(timestamp) >= NOW() - INTERVAL '24 hours'\nORDER BY timestamp DESC\nLIMIT 30",
+          "refId": "A"
+        }
+      ],
+      "title": "📋 Trades das Últimas 24h",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 30,
+      "title": "📊 Performance Histórica Acumulada",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "btc-trading-pg"
+      },
+      "description": "PnL acumulado ao longo do tempo por perfil",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "showPoints": "auto"
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 14,
+        "x": 0,
+        "y": 25
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "btc-trading-pg"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  to_timestamp(timestamp) AS time,\n  profile,\n  SUM(COALESCE(pnl, 0)::numeric) OVER (\n    PARTITION BY profile ORDER BY timestamp\n    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW\n  ) AS \"PnL Acumulado\"\nFROM btc.trades\nWHERE dry_run = false\n  AND symbol = 'BTC-USDT'\n  AND side = 'sell'\nORDER BY timestamp",
+          "refId": "A"
+        }
+      ],
+      "title": "📈 PnL Acumulado por Perfil",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "btc-trading-pg"
+      },
+      "description": "Performance histórica consolidada por perfil",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "PnL Total"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Win Rate"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 50
+                    },
+                    {
+                      "color": "green",
+                      "value": 60
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 10,
+        "x": 14,
+        "y": 25
+      },
+      "id": 7,
+      "options": {
+        "footer": {
+          "show": false
+        },
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "btc-trading-pg"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  profile AS \"Perfil\",\n  COUNT(CASE WHEN side='sell' THEN 1 END) AS \"Sells Fechados\",\n  COUNT(CASE WHEN side='sell' AND pnl > 0 THEN 1 END) AS \"Wins\",\n  COUNT(CASE WHEN side='sell' AND pnl < 0 THEN 1 END) AS \"Losses\",\n  ROUND(\n    100.0 * COUNT(CASE WHEN side='sell' AND pnl > 0 THEN 1 END)\n    / NULLIF(COUNT(CASE WHEN side='sell' THEN 1 END), 0)::numeric, 1\n  ) AS \"Win Rate\",\n  ROUND(SUM(CASE WHEN side='sell' THEN COALESCE(pnl,0) ELSE 0 END)::numeric, 4) AS \"PnL Total\"\nFROM btc.trades\nWHERE dry_run = false AND symbol = 'BTC-USDT'\nGROUP BY profile\nORDER BY profile",
+          "refId": "A"
+        }
+      ],
+      "title": "📊 Performance Histórica por Perfil",
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 34
+      },
+      "id": 40,
+      "title": "📂 Posições Abertas",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "btc-trading-pg"
+      },
+      "description": "Posições de compra abertas com PnL não realizado estimado",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "PnL Não Realizado (USD)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "PnL %"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "green",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 35
+      },
+      "id": 8,
+      "options": {
+        "footer": {
+          "show": false
+        },
+        "showHeader": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "btc-trading-pg"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  t.profile AS \"Perfil\",\n  COUNT(*) AS \"Entradas Abertas\",\n  ROUND(SUM(t.size)::numeric, 8) AS \"BTC Total\",\n  ROUND(AVG(t.price)::numeric, 2) AS \"Preço Médio Entrada\",\n  (SELECT ROUND(price::numeric, 2) FROM btc.market_states WHERE symbol='BTC-USDT' ORDER BY timestamp DESC LIMIT 1) AS \"Preço Atual\",\n  ROUND(\n    ((SELECT price FROM btc.market_states WHERE symbol='BTC-USDT' ORDER BY timestamp DESC LIMIT 1)::numeric\n      - AVG(t.price)::numeric) * SUM(t.size)::numeric, 4\n  ) AS \"PnL Não Realizado (USD)\",\n  ROUND(\n    ((SELECT price FROM btc.market_states WHERE symbol='BTC-USDT' ORDER BY timestamp DESC LIMIT 1)::numeric\n      / AVG(t.price)::numeric - 1) * 100, 2\n  ) AS \"PnL %\"\nFROM btc.trades t\nWHERE t.dry_run = false\n  AND t.symbol = 'BTC-USDT'\n  AND t.side = 'buy'\n  AND to_timestamp(t.timestamp) >= NOW() - INTERVAL '30 days'\nGROUP BY t.profile\nORDER BY t.profile",
+          "refId": "A"
+        }
+      ],
+      "title": "📂 Posições Abertas com PnL Não Realizado",
+      "type": "table"
+    }
+  ],
+  "refresh": "1h",
+  "schemaVersion": 38,
+  "tags": [
+    "trading",
+    "btc",
+    "ollama",
+    "mcp",
+    "daily-report"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "📊 Trading Daily Report — Ollama MCP",
+  "uid": "trading-daily-report-mcp",
+  "version": 2,
+  "weekStart": ""
+}
