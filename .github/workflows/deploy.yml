@@ -50,6 +50,10 @@ jobs:
 
           rsync $RSYNC_FLAGS "$SRC/" "$DEST/"
 
+          # touch para atualizar mtime — rsync --checksum preserva mtime original
+          # sem isso, Grafana não detecta mudança via updateIntervalSeconds
+          find "$DEST" -name "*.json" ! -path "*/.bak*" -exec touch {} \;
+
           echo "==> Sync concluído"
           echo "Dashboards por categoria:"
           for cat in trading infrastructure storage agents security; do
