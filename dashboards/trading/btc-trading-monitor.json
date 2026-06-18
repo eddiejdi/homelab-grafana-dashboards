@@ -476,6 +476,17 @@
           "rawQuery": true,
           "rawSql": "WITH bucketed AS (\n  SELECT\n    to_timestamp($__unixEpochGroup(timestamp, $__interval)) AS \"time\",\n    COALESCE(SUM(pnl), 0)::numeric(12,4) AS pnl_delta\n  FROM btc.trades\n  WHERE symbol = '$coin'\n    AND dry_run = false\n    AND profile = 'aggressive'\n    AND 'aggressive' IN (${profile:sqlstring})\n    AND timestamp BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\n  GROUP BY 1\n),\npoints AS (\n  SELECT to_timestamp($__unixEpochFrom()) AS \"time\", 0::numeric(12,4) AS pnl_delta, 0 AS sort_key\n  UNION ALL SELECT \"time\", pnl_delta, 1 AS sort_key FROM bucketed\n  UNION ALL SELECT to_timestamp($__unixEpochTo()) AS \"time\", 0::numeric(12,4) AS pnl_delta, 2 AS sort_key\n)\nSELECT \"time\",\n  SUM(pnl_delta) OVER (ORDER BY \"time\", sort_key)::numeric(12,4) AS \"Aggressive PnL\"\nFROM points ORDER BY 1, sort_key",
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "btc-trading-pg"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH bucketed AS (\n  SELECT\n    to_timestamp($__unixEpochGroup(timestamp, $__interval)) AS \"time\",\n    COALESCE(SUM(pnl), 0)::numeric(12,4) AS pnl_delta\n  FROM btc.trades\n  WHERE symbol = '$coin'\n    AND dry_run = false\n    AND profile = 'shadow'\n    AND 'shadow' IN (${profile:sqlstring})\n    AND timestamp BETWEEN $__unixEpochFrom() AND $__unixEpochTo()\n  GROUP BY 1\n),\npoints AS (\n  SELECT to_timestamp($__unixEpochFrom()) AS \"time\", 0::numeric(12,4) AS pnl_delta, 0 AS sort_key\n  UNION ALL SELECT \"time\", pnl_delta, 1 AS sort_key FROM bucketed\n  UNION ALL SELECT to_timestamp($__unixEpochTo()) AS \"time\", 0::numeric(12,4) AS pnl_delta, 2 AS sort_key\n)\nSELECT \"time\",\n  SUM(pnl_delta) OVER (ORDER BY \"time\", sort_key)::numeric(12,4) AS \"Shadow PnL\"\nFROM points ORDER BY 1, sort_key",
+          "refId": "C"
         }
       ],
       "title": "📊 PnL no Período",
@@ -2634,7 +2645,7 @@
         "type": "prometheus",
         "uid": "dfc0w4yioe4u8e"
       },
-      "description": "Saldo livre reportado pelo exchange: equity live menos posição aberta live.",
+      "description": "USDT disponível: para perfil live = saldo real na exchange; para perfil dry/shadow = capital_inicial + pnl_realizado − posição_aberta.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2686,7 +2697,7 @@
       },
       "targets": [
         {
-          "expr": "max by(profile)((btc_trading_equity_usdt{coin=\"$coin\",profile=~\"$profile\"}) or (btc_trading_equity_usdt{exported_coin=\"$coin\",exported_profile=~\"$profile\"})) - max by(profile)((btc_trading_open_position_usdt{coin=\"$coin\",profile=~\"$profile\"}) or (btc_trading_open_position_usdt{exported_coin=\"$coin\",exported_profile=~\"$profile\"}))",
+          "expr": "max by(profile)((btc_trading_available_usdt{coin=\"$coin\",profile=~\"$profile\"}) or (btc_trading_available_usdt{exported_coin=\"$coin\",exported_profile=~\"$profile\"}))",
           "legendFormat": "{{profile}}",
           "refId": "A"
         }
@@ -3948,7 +3959,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "WITH latest_profile_sell AS (\n  SELECT\n    profile,\n    MAX(timestamp) AS last_sell_ts\n  FROM btc.trades\n  WHERE symbol = '$coin'\n    AND dry_run = false\n    AND side IN ('sell', 'sell_reconciled')\n    AND profile IN ('aggressive', 'conservative')\n  GROUP BY profile\n),\nopen_buys_raw AS (\n  SELECT\n    t.*\n  FROM btc.trades t\n  LEFT JOIN latest_profile_sell lps ON lps.profile = t.profile\n  WHERE t.symbol = '$coin'\n    AND t.dry_run = false\n    AND t.side = 'buy'\n    AND COALESCE(t.metadata->>'source', '') != 'external_deposit'\n    AND t.profile IN ('aggressive', 'conservative')\n    AND (lps.last_sell_ts IS NULL OR t.timestamp > lps.last_sell_ts)\n),\nposition_summary AS (\n  SELECT\n    profile,\n    CONCAT(\n      profile,\n      '#',\n      MIN(id),\n      CASE WHEN MIN(id) <> MAX(id) THEN CONCAT('-', MAX(id)) ELSE '' END\n    ) AS position_ref,\n    COUNT(*) AS entries\n  FROM open_buys_raw\n  WHERE profile ~* '^(${profile:pipe})$'\n  GROUP BY profile\n),\nopen_trades AS (\n  SELECT\n    ob.id,\n    ob.profile,\n    ob.price,\n    ob.size,\n    ps.position_ref,\n    ps.entries,\n    COALESCE(\n      NULLIF(ob.metadata->>'target_sell_trigger_price', '')::double precision,\n      NULLIF(ob.metadata->>'target_sell_price', '')::double precision\n    ) AS sell_target,\n    COALESCE(\n      NULLIF(ob.metadata->>'target_sell_reason', ''),\n      NULLIF(ob.metadata->>'strategy_reason', ''),\n      NULLIF(ob.metadata->>'reason', '')\n    ) AS target_reason\n  FROM open_buys_raw ob\n  JOIN position_summary ps ON ps.profile = ob.profile\n  WHERE ob.profile ~* '^(${profile:pipe})$'\n),\nlatest_state AS (\n  SELECT\n    price AS current_price\n  FROM btc.market_states\n  WHERE symbol = '$coin'\n  ORDER BY timestamp DESC\n  LIMIT 1\n)\nSELECT\n  ot.id AS \"Trade\",\n  ot.profile AS \"Perfil\",\n  CONCAT(ot.profile, ' #', ot.id::text) AS \"Bot\",\n  CASE\n    WHEN ot.entries > 1 AND ot.target_reason IS NOT NULL THEN CONCAT('multientrada ', ot.entries, 'x • ', ot.target_reason)\n    WHEN ot.entries > 1 THEN CONCAT('multientrada ', ot.entries, 'x em ', ot.position_ref)\n    WHEN ot.target_reason IS NOT NULL THEN ot.target_reason\n    ELSE CONCAT('entrada unica em ', ot.position_ref)\n  END AS \"Cenário\",\n  ROUND(ot.size::numeric, 8) AS \"BTC\",\n  ROUND(ot.price::numeric, 2) AS \"Entrada\",\n  ROUND(ls.current_price::numeric, 2) AS \"Atual\",\n  ROUND(ot.sell_target::numeric, 2) AS \"Alvo\",\n  ROUND((ot.sell_target - ls.current_price)::numeric, 2) AS \"Falta $\",\n  ROUND(((ot.sell_target / NULLIF(ls.current_price, 0) - 1) * 100)::numeric, 2) AS \"Falta %\",\n  ROUND(\n    LEAST(\n      100,\n      GREATEST(\n        0,\n        100 * (ls.current_price - ot.price) / NULLIF(ot.sell_target - ot.price, 0)\n      )\n    )::numeric,\n    1\n  ) AS \"Progresso %\",\n  ROUND(((ls.current_price - ot.price) * ot.size)::numeric, 4) AS \"PnL $\",\n  ROUND((((ls.current_price / NULLIF(ot.price, 0)) - 1) * 100)::numeric, 2) AS \"PnL %\",\n  '🛒 Abrir menu' AS \"Ação\"\nFROM open_trades ot\nCROSS JOIN latest_state ls\nORDER BY ot.id DESC;",
+          "rawSql": "WITH latest_profile_sell AS (\n  SELECT\n    profile,\n    MAX(timestamp) AS last_sell_ts\n  FROM btc.trades\n  WHERE symbol = '$coin'\n    AND dry_run = false\n    AND side IN ('sell', 'sell_reconciled')\n    AND profile IN ('aggressive', 'conservative', 'shadow')\n  GROUP BY profile\n),\nopen_buys_raw AS (\n  SELECT\n    t.*\n  FROM btc.trades t\n  LEFT JOIN latest_profile_sell lps ON lps.profile = t.profile\n  WHERE t.symbol = '$coin'\n    AND t.dry_run = false\n    AND t.side = 'buy'\n    AND COALESCE(t.metadata->>'source', '') != 'external_deposit'\n    AND t.profile IN ('aggressive', 'conservative', 'shadow')\n    AND (lps.last_sell_ts IS NULL OR t.timestamp > lps.last_sell_ts)\n),\nposition_summary AS (\n  SELECT\n    profile,\n    CONCAT(\n      profile,\n      '#',\n      MIN(id),\n      CASE WHEN MIN(id) <> MAX(id) THEN CONCAT('-', MAX(id)) ELSE '' END\n    ) AS position_ref,\n    COUNT(*) AS entries\n  FROM open_buys_raw\n  WHERE profile ~* '^(${profile:pipe})$'\n  GROUP BY profile\n),\nopen_trades AS (\n  SELECT\n    ob.id,\n    ob.profile,\n    ob.price,\n    ob.size,\n    ps.position_ref,\n    ps.entries,\n    COALESCE(\n      NULLIF(ob.metadata->>'target_sell_trigger_price', '')::double precision,\n      NULLIF(ob.metadata->>'target_sell_price', '')::double precision\n    ) AS sell_target,\n    COALESCE(\n      NULLIF(ob.metadata->>'target_sell_reason', ''),\n      NULLIF(ob.metadata->>'strategy_reason', ''),\n      NULLIF(ob.metadata->>'reason', '')\n    ) AS target_reason\n  FROM open_buys_raw ob\n  JOIN position_summary ps ON ps.profile = ob.profile\n  WHERE ob.profile ~* '^(${profile:pipe})$'\n),\nlatest_state AS (\n  SELECT\n    price AS current_price\n  FROM btc.market_states\n  WHERE symbol = '$coin'\n  ORDER BY timestamp DESC\n  LIMIT 1\n)\nSELECT\n  ot.id AS \"Trade\",\n  ot.profile AS \"Perfil\",\n  CONCAT(ot.profile, ' #', ot.id::text) AS \"Bot\",\n  CASE\n    WHEN ot.entries > 1 AND ot.target_reason IS NOT NULL THEN CONCAT('multientrada ', ot.entries, 'x • ', ot.target_reason)\n    WHEN ot.entries > 1 THEN CONCAT('multientrada ', ot.entries, 'x em ', ot.position_ref)\n    WHEN ot.target_reason IS NOT NULL THEN ot.target_reason\n    ELSE CONCAT('entrada unica em ', ot.position_ref)\n  END AS \"Cenário\",\n  ROUND(ot.size::numeric, 8) AS \"BTC\",\n  ROUND(ot.price::numeric, 2) AS \"Entrada\",\n  ROUND(ls.current_price::numeric, 2) AS \"Atual\",\n  ROUND(ot.sell_target::numeric, 2) AS \"Alvo\",\n  ROUND((ot.sell_target - ls.current_price)::numeric, 2) AS \"Falta $\",\n  ROUND(((ot.sell_target / NULLIF(ls.current_price, 0) - 1) * 100)::numeric, 2) AS \"Falta %\",\n  ROUND(\n    LEAST(\n      100,\n      GREATEST(\n        0,\n        100 * (ls.current_price - ot.price) / NULLIF(ot.sell_target - ot.price, 0)\n      )\n    )::numeric,\n    1\n  ) AS \"Progresso %\",\n  ROUND(((ls.current_price - ot.price) * ot.size)::numeric, 4) AS \"PnL $\",\n  ROUND((((ls.current_price / NULLIF(ot.price, 0)) - 1) * 100)::numeric, 2) AS \"PnL %\",\n  '🛒 Abrir menu' AS \"Ação\"\nFROM open_trades ot\nCROSS JOIN latest_state ls\nORDER BY ot.id DESC;",
           "refId": "A"
         }
       ],
@@ -4956,11 +4967,16 @@
           },
           {
             "selected": false,
+            "text": "shadow",
+            "value": "shadow"
+          },
+          {
+            "selected": false,
             "text": "exchange_sync",
             "value": "exchange_sync"
           }
         ],
-        "query": "conservative,aggressive,exchange_sync",
+        "query": "conservative,aggressive,shadow,exchange_sync",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
