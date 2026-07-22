@@ -4727,7 +4727,7 @@
             "type": "prometheus",
             "uid": "dfc0w4yioe4u8e"
           },
-          "expr": "max by(profile)((btc_trading_equity_change_today_pct{coin=\"$coin\",profile=~\"$profile\"}) or (btc_trading_equity_change_today_pct{exported_coin=\"$coin\",exported_profile=~\"$profile\"}))",
+          "expr": "max((btc_trading_equity_change_today_pct{coin=\"$coin\",profile=~\"$profile\"}) or (btc_trading_equity_change_today_pct{exported_coin=\"$coin\",exported_profile=~\"$profile\"}))",
           "refId": "A",
           "legendFormat": "Hoje %"
         },
@@ -4736,7 +4736,7 @@
             "type": "prometheus",
             "uid": "dfc0w4yioe4u8e"
           },
-          "expr": "max by(profile)((btc_trading_equity_change_today_usdt{coin=\"$coin\",profile=~\"$profile\"}) or (btc_trading_equity_change_today_usdt{exported_coin=\"$coin\",exported_profile=~\"$profile\"}))",
+          "expr": "max((btc_trading_equity_change_today_usdt{coin=\"$coin\",profile=~\"$profile\"}) or (btc_trading_equity_change_today_usdt{exported_coin=\"$coin\",exported_profile=~\"$profile\"}))",
           "refId": "B",
           "legendFormat": "USDT"
         }
