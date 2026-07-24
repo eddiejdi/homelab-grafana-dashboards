@@ -27,12 +27,26 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Guard — nenhum uid duplicado sob o path do provider
+        run: |
+          set -euo pipefail
+          # Roda ANTES do rsync: compara os arquivos que este repo vai gravar com os
+          # que já existem no provider (incluindo os deployados por outros repos, como
+          # o eddie-auto-dev). Dois arquivos com o mesmo uid congelam o provisionamento
+          # inteiro — deploys vão pro disco e a API segue servindo versões antigas.
+          python3 scripts/check_dashboard_uids.py \
+            --repo "$GITHUB_WORKSPACE/dashboards" \
+            --provider-dir /home/homelab/monitoring/grafana/provisioning/dashboards
+
       - name: Sync dashboards → provisioning
         run: |
           set -euo pipefail
 
           DEST=/home/homelab/monitoring/grafana/provisioning/dashboards
           SRC=$GITHUB_WORKSPACE/dashboards
+          # Backups NUNCA dentro do path do provider: a varredura do Grafana é
+          # recursiva e qualquer .json ali vira duplicata de uid.
+          BACKUP_DIR=/home/homelab/monitoring/grafana/dashboard_quarantine/$(date +%Y%m%d_%H%M%S)
 
           echo "==> Sincronizando dashboards de $SRC → $DEST"
 
@@ -40,19 +54,21 @@ jobs:
           for cat in trading infrastructure storage agents security; do
             mkdir -p "$DEST/$cat"
           done
+          mkdir -p "$BACKUP_DIR"
 
           # Flags de rsync
-          RSYNC_FLAGS="-av --checksum --backup --backup-dir=$DEST/.bak-$(date +%Y%m%d_%H%M%S)"
+          RSYNC_FLAGS="-av --checksum --backup --backup-dir=$BACKUP_DIR"
           if [ "${{ github.event.inputs.full_sync }}" = "true" ]; then
             RSYNC_FLAGS="$RSYNC_FLAGS --delete"
             echo "==> Modo full_sync ativado: arquivos removidos do repo serão deletados do servidor"
           fi
 
           rsync $RSYNC_FLAGS "$SRC/" "$DEST/"
+          rmdir "$BACKUP_DIR" 2>/dev/null || echo "==> Backups em $BACKUP_DIR"
 
           # touch para atualizar mtime — rsync --checksum preserva mtime original
           # sem isso, Grafana não detecta mudança via updateIntervalSeconds
-          find "$DEST" -name "*.json" ! -path "*/.bak*" -exec touch {} \;
+          find "$DEST" -name "*.json" -exec touch {} \;
 
           echo "==> Sync concluído"
           echo "Dashboards por categoria:"
@@ -84,6 +100,21 @@ jobs:
             docker logs grafana --tail 20 2>/dev/null || true
           fi
 
+      - name: Verificar que o provisionamento não travou
+        run: |
+          set -euo pipefail
+          # Rede de segurança do guard pré-rsync: se o provider recusou gravar, o
+          # deploy foi só pro disco e a API segue servindo o dashboard antigo.
+          FROZEN=$(docker logs grafana --since 90s 2>&1 \
+            | grep -c 'restricted database access\|because of duplicates' || true)
+          if [ "$FROZEN" -ne 0 ]; then
+            echo "❌ Provisionamento congelado — $FROZEN avisos de duplicata no Grafana"
+            docker logs grafana --since 90s 2>&1 \
+              | grep 'restricted database access\|because of duplicates' | tail -10
+            exit 1
+          fi
+          echo "✅ Provisionamento gravando normalmente (0 avisos de duplicata)"
+
       - name: Resumo do deploy
         run: |
           echo "=============================="
@@ -94,4 +125,4 @@ jobs:
           echo "=============================="
           echo "Dashboards deployados:"
           find /home/homelab/monitoring/grafana/provisioning/dashboards \
-            -name "*.json" ! -path "*/.bak*" | sort | sed 's|.*/dashboards/||'
+            -name "*.json" | sort | sed 's|.*/dashboards/||'
