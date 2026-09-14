@@ -77,6 +77,7 @@
             "uid": "dfc0w4yioe4u8e"
           },
           "expr": "opencode_connection_connected",
+          "instant": true,
           "legendFormat": "{{connection}}",
           "refId": "A"
         }
@@ -135,6 +136,7 @@
             "uid": "dfc0w4yioe4u8e"
           },
           "expr": "sum(opencode_connection_messages_total) by (connection)",
+          "instant": true,
           "legendFormat": "{{connection}}",
           "refId": "A"
         }
@@ -193,6 +195,7 @@
             "uid": "dfc0w4yioe4u8e"
           },
           "expr": "sum(opencode_connection_cost_total) by (connection)",
+          "instant": true,
           "legendFormat": "{{connection}}",
           "refId": "A"
         }
@@ -269,6 +272,7 @@
             "uid": "dfc0w4yioe4u8e"
           },
           "expr": "opencode_connection_messages_limit",
+          "instant": true,
           "legendFormat": "{{connection}}",
           "refId": "A"
         }
@@ -524,6 +528,7 @@
             "uid": "dfc0w4yioe4u8e"
           },
           "expr": "opencode_connection_cost_period{connection=~\"$connection\"}",
+          "instant": true,
           "legendFormat": "{{connection}} · {{period}}",
           "refId": "A"
         }
@@ -592,6 +597,7 @@
             "uid": "dfc0w4yioe4u8e"
           },
           "expr": "opencode_connection_renewal_epoch{connection=~\"$connection\"}",
+          "instant": true,
           "legendFormat": "{{connection}}",
           "refId": "A"
         }
@@ -660,6 +666,7 @@
             "uid": "dfc0w4yioe4u8e"
           },
           "expr": "clamp_max(((opencode_connection_messages_limit - clamp_min(opencode_connection_limit_remaining, 0)) / clamp_min(opencode_connection_messages_limit, 1)) * (opencode_connection_messages_limit > 0) * 100, 100) or vector(0)",
+          "instant": true,
           "legendFormat": "{{connection}}",
           "refId": "A"
         }
@@ -736,6 +743,7 @@
             "uid": "dfc0w4yioe4u8e"
           },
           "expr": "opencode_connection_limit_remaining",
+          "instant": true,
           "legendFormat": "{{connection}}",
           "refId": "A"
         }
@@ -794,6 +802,7 @@
             "uid": "dfc0w4yioe4u8e"
           },
           "expr": "sum(opencode_connection_tokens_cache_read_total) by (connection) / clamp_min(sum(opencode_connection_tokens_input_total) by (connection), 1)",
+          "instant": true,
           "legendFormat": "{{connection}}",
           "refId": "A"
         }
@@ -863,12 +872,12 @@
     ]
   },
   "time": {
-    "from": "now-30d",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "OpenCode — Conexões e Uso",
   "uid": "opencode-connections-usage",
-  "version": 1
+  "version": 2
 }
