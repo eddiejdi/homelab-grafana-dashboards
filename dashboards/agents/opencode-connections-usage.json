@@ -665,7 +665,7 @@
             "type": "prometheus",
             "uid": "dfc0w4yioe4u8e"
           },
-          "expr": "clamp_max(((opencode_connection_messages_limit - clamp_min(opencode_connection_limit_remaining, 0)) / clamp_min(opencode_connection_messages_limit, 1)) * (opencode_connection_messages_limit > 0) * 100, 100) or vector(0)",
+          "expr": "clamp_max(((opencode_connection_messages_limit - clamp_min(opencode_connection_limit_remaining, 0)) / clamp_min(opencode_connection_messages_limit, 1)) * (opencode_connection_messages_limit > 0) * (opencode_connection_limit_remaining >= 0) * 100, 100) or vector(0)",
           "instant": true,
           "legendFormat": "{{connection}}",
           "refId": "A"
