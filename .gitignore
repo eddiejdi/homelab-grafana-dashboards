@@ -1,3 +1,5 @@
 *.bak*
 *.disabled*
 .bak-*/
+__pycache__/
+*.pyc

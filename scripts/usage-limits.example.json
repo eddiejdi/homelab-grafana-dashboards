@@ -1,0 +1,41 @@
+{
+  "providers": {
+    "OpenCode Zen": {
+      "limit": 1000,
+      "period": "monthly",
+      "renewal": "2026-10-01"
+    },
+    "OpenCode Go": {
+      "limit": 2000,
+      "period": "monthly",
+      "renewal": "2026-10-01"
+    },
+    "GitHub Copilot": {
+      "limit": 2000,
+      "period": "monthly",
+      "renewal": "2026-09-14"
+    },
+    "xAI Grok": {
+      "limit": 500,
+      "period": "weekly",
+      "renewal": "2026-09-16"
+    },
+    "OpenAI": {
+      "limit": 0,
+      "period": "none"
+    },
+    "HuggingFace": {
+      "limit": 0,
+      "period": "none"
+    },
+    "Ollama (local)": {
+      "limit": 0,
+      "period": "none"
+    }
+  },
+  "merge": {
+    "ollama-gpu1": "Ollama (local)",
+    "ollama-nas": "Ollama (local)",
+    "traycer-openrouter": "OpenRouter"
+  }
+}
