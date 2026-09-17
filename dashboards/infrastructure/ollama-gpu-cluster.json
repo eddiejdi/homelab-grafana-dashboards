@@ -1,0 +1,1409 @@
+{
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(ollama_loaded_models{job=\"ollama-gpu-coordinator\",endpoint=~\"gpu0-rtx3060|gpu1-gtx1050|nas-rtx2060\"})",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Modelos Carregados",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "orange",
+            "mode": "fixed"
+          },
+          "unit": "decgbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(ollama_model_ram_mb{job=\"ollama-gpu-coordinator\"}) / 1024",
+          "instant": true,
+          "refId": "A",
+          "legendFormat": "{{endpoint}} · {{model}}"
+        }
+      ],
+      "title": "VRAM Usada Total",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "unit": "decmbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "gpu_coord_vram_free_mb{job=\"ollama-gpu-coordinator\",endpoint=\"gpu0-rtx3060\"}",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "VRAM Livre GPU0",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "purple",
+            "mode": "fixed"
+          },
+          "unit": "decmbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "gpu_coord_vram_free_mb{job=\"ollama-gpu-coordinator\",endpoint=\"gpu1-gtx1050\"}",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "VRAM Livre GPU1",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "teal",
+            "mode": "fixed"
+          },
+          "unit": "decmbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "gpu_coord_vram_free_mb{job=\"ollama-gpu-coordinator\",endpoint=\"nas-rtx2060\"}",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "VRAM Livre NAS",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(gpu_coord_healthy{job=\"ollama-gpu-coordinator\"})",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Endpoints Saudaveis",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decmbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 14,
+        "x": 0,
+        "y": 4
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "horizontal"
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "ollama_model_ram_mb{job=\"ollama-gpu-coordinator\"}",
+          "instant": true,
+          "legendFormat": "{{endpoint}} · {{model}}",
+          "refId": "A"
+        }
+      ],
+      "title": "VRAM por Modelo (MB)",
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 10,
+        "x": 14,
+        "y": 4
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "ollama_loaded_models{job=\"ollama-gpu-coordinator\",endpoint=\"gpu0-rtx3060\"}",
+          "legendFormat": "GPU0 RTX 3060",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "ollama_loaded_models{job=\"ollama-gpu-coordinator\",endpoint=\"gpu1-gtx1050\"}",
+          "legendFormat": "GPU1 GTX 1050",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "ollama_loaded_models{job=\"ollama-gpu-coordinator\",endpoint=\"nas-rtx2060\"}",
+          "legendFormat": "NAS RTX 2060",
+          "refId": "C"
+        }
+      ],
+      "title": "Modelos Carregados por GPU",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "gpu_coord_active_requests{job=\"ollama-gpu-coordinator\",endpoint=\"gpu0-rtx3060\"}",
+          "legendFormat": "GPU0 RTX 3060",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "gpu_coord_active_requests{job=\"ollama-gpu-coordinator\",endpoint=\"gpu1-gtx1050\"}",
+          "legendFormat": "GPU1 GTX 1050",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "gpu_coord_active_requests{job=\"ollama-gpu-coordinator\",endpoint=\"nas-rtx2060\"}",
+          "legendFormat": "NAS RTX 2060",
+          "refId": "C"
+        }
+      ],
+      "title": "Requisicoes Ativas por GPU",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decmbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "gpu_coord_vram_free_mb{job=\"ollama-gpu-coordinator\",endpoint=\"gpu0-rtx3060\"}",
+          "legendFormat": "GPU0 RTX3060 (12GB)",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "gpu_coord_vram_free_mb{job=\"ollama-gpu-coordinator\",endpoint=\"gpu1-gtx1050\"}",
+          "legendFormat": "GPU1 GTX1050 (2GB)",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "gpu_coord_vram_free_mb{job=\"ollama-gpu-coordinator\",endpoint=\"nas-rtx2060\"}",
+          "legendFormat": "NAS RTX2060 (8GB)",
+          "refId": "C"
+        }
+      ],
+      "title": "VRAM Livre por GPU (MB)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "dfqjvc7g094owc"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "wrap": true
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "horario"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 180
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "model"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 150
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "endpoint"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 130
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "seg"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 60
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 55
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 14,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 11,
+      "interval": "2m",
+      "description": "Via llm-log-panel (:8092) — proxy resiliente. Se o coordinator cair, o painel fica vazio (HTTP 200) em vez de 400 no dashboard.",
+      "options": {
+        "footer": {
+          "show": false
+        },
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "ts"
+          }
+        ]
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "dfqjvc7g094owc"
+          },
+          "refId": "A",
+          "type": "json",
+          "source": "url",
+          "format": "table",
+          "parser": "backend",
+          "url": "http://172.17.0.1:8092/api/coordinator-requests?limit=50",
+          "url_options": {
+            "method": "GET",
+            "data": "",
+            "timeout": 5
+          },
+          "root_selector": "requests",
+          "columns": [
+            {
+              "selector": "ts",
+              "text": "horario",
+              "type": "string"
+            },
+            {
+              "selector": "model",
+              "text": "model",
+              "type": "string"
+            },
+            {
+              "selector": "endpoint",
+              "text": "endpoint",
+              "type": "string"
+            },
+            {
+              "selector": "elapsed_s",
+              "text": "seg",
+              "type": "number"
+            },
+            {
+              "selector": "status",
+              "text": "status",
+              "type": "string"
+            },
+            {
+              "selector": "prompt",
+              "text": "prompt",
+              "type": "string"
+            },
+            {
+              "selector": "response",
+              "text": "resposta",
+              "type": "string"
+            },
+            {
+              "selector": "path",
+              "text": "path",
+              "type": "string"
+            },
+            {
+              "selector": "error",
+              "text": "erro",
+              "type": "string"
+            }
+          ],
+          "filters": []
+        }
+      ],
+      "title": "Payload Log — Últimas requisições (proxy resiliente, limit=50)",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 36
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(rate(gpu_coord_total_requests_served{job=\"ollama-gpu-coordinator\"}[5m])) by (endpoint)",
+          "legendFormat": "{{endpoint}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Request rate por endpoint (req/s via coordinator)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 36
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "histogram_quantile(0.95, sum(rate(ollama_request_duration_seconds_bucket{job=\"ollama-gpu-coordinator\"}[5m])) by (model, le))",
+          "legendFormat": "{{model}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Request Latency p95 (s)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 44
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+          "legendFormat": "CPU %",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU Homelab (%)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decgbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 44
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes)/(1024^3)",
+          "legendFormat": "Usado",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(node_memory_MemTotal_bytes)/(1024^3)",
+          "legendFormat": "Total",
+          "refId": "B"
+        }
+      ],
+      "title": "RAM Homelab (GB)",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 52
+      },
+      "id": 20,
+      "title": "Ollama Coordinator (métricas atuais)",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "semi-dark-blue",
+            "mode": "fixed"
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 53
+      },
+      "id": 21,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(ollama_request_duration_seconds_count{job=\"ollama-gpu-coordinator\"})",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total Requests (Coordinator)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-green",
+            "mode": "fixed"
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 53
+      },
+      "id": 22,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(ollama_generated_tokens_total{job=~\"ollama-gpu-coordinator|ollama-nas-rtx2060\"})",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Tokens Gerados",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-orange",
+            "mode": "fixed"
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 53
+      },
+      "id": 23,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(ollama_prompt_tokens_total{job=~\"ollama-gpu-coordinator|ollama-nas-rtx2060\"})",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Prompt Tokens",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-purple",
+            "mode": "fixed"
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 53
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "histogram_quantile(0.95, sum(rate(ollama_request_duration_seconds_bucket{job=\"ollama-gpu-coordinator\"}[5m])) by (model, le))",
+          "instant": true,
+          "legendFormat": "{{model}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Latencia p95 (Coordinator)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-red",
+            "mode": "fixed"
+          },
+          "unit": "decmbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 53
+      },
+      "id": 25,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(ollama_model_ram_mb{job=\"ollama-gpu-coordinator\",endpoint=\"gpu0-rtx3060\"})",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "VRAM Usada (GPU0)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-yellow",
+            "mode": "fixed"
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 53
+      },
+      "id": 26,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(ollama_loaded_models{job=\"ollama-gpu-coordinator\",endpoint=\"gpu0-rtx3060\"})",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Modelos Carregados (GPU0)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 57
+      },
+      "id": 27,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(rate(ollama_request_duration_seconds_count{job=\"ollama-gpu-coordinator\"}[5m])) by (model)",
+          "legendFormat": "{{model}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Request Rate por Modelo (Coordinator)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 57
+      },
+      "id": 28,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "histogram_quantile(0.50, sum(rate(ollama_request_duration_seconds_bucket{job=\"ollama-gpu-coordinator\"}[5m])) by (model, le))",
+          "legendFormat": "p50 {{model}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "histogram_quantile(0.95, sum(rate(ollama_request_duration_seconds_bucket{job=\"ollama-gpu-coordinator\"}[5m])) by (model, le))",
+          "legendFormat": "p95 {{model}}",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "histogram_quantile(0.99, sum(rate(ollama_request_duration_seconds_bucket{job=\"ollama-gpu-coordinator\"}[5m])) by (model, le))",
+          "legendFormat": "p99 {{model}}",
+          "refId": "C"
+        }
+      ],
+      "title": "Latencia por Modelo (Coordinator)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 65
+      },
+      "id": 29,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(rate(ollama_generated_tokens_total{job=~\"ollama-gpu-coordinator|ollama-nas-rtx2060\"}[5m])) by (model)",
+          "legendFormat": "gerados {{model}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "sum(rate(ollama_prompt_tokens_total{job=~\"ollama-gpu-coordinator|ollama-nas-rtx2060\"}[5m])) by (model)",
+          "legendFormat": "prompt {{model}}",
+          "refId": "B"
+        }
+      ],
+      "title": "Tokens por Modelo",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decmbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 65
+      },
+      "id": 30,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "ollama_model_ram_mb{job=\"ollama-gpu-coordinator\",endpoint=\"gpu0-rtx3060\"}",
+          "legendFormat": "{{model}}",
+          "refId": "A"
+        }
+      ],
+      "title": "VRAM por Modelo (GPU0 MB)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dfc0w4yioe4u8e"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 16,
+        "w": 24,
+        "x": 0,
+        "y": 73
+      },
+      "id": 31,
+      "options": {
+        "afterRender": "",
+        "content": "{{{training_history_report data.[0]}}}",
+        "contentPartials": [],
+        "defaultContent": "<p style='color:#8e8ea0;padding:16px'>Sem dados de treinamento no intervalo.</p>",
+        "editor": {
+          "format": "auto",
+          "language": "handlebars"
+        },
+        "editors": [],
+        "externalStyles": [],
+        "helpers": "const handlebars = context.handlebars;\n\nhandlebars.registerHelper('training_history_report', function(rows) {\n  if (!rows || !rows.length) {\n    return new handlebars.SafeString('<p style=\"color:#888;padding:12px\">Sem treinamentos detectados nos últimos 30 dias.</p>');\n  }\n  function esc(v) {\n    if (v === null || v === undefined) return '';\n    return String(v).replace(/[&<>\"']/g, function(c) {\n      return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c];\n    });\n  }\n  function get(r, names) {\n    for (var i = 0; i < names.length; i++) {\n      if (r[names[i]] !== undefined && r[names[i]] !== null) return r[names[i]];\n    }\n    return '';\n  }\n  function num(v, digits) {\n    var n = parseFloat(v || 0);\n    if (!isFinite(n)) n = 0;\n    return n.toFixed(digits);\n  }\n  function statusText(s) {\n    s = String(s || '0');\n    if (s === '1') return 'EM ANDAMENTO';\n    if (s === '2') return 'FINALIZADO';\n    if (s === '3') return 'ERRO';\n    return 'IDLE';\n  }\n  function statusCls(s) {\n    s = String(s || '0');\n    if (s === '1') return 'run';\n    if (s === '2') return 'done';\n    if (s === '3') return 'err';\n    return 'idle';\n  }\n  function placa(vram) {\n    var n = parseFloat(vram || 0);\n    if (n >= 9000) return 'GPU0 RTX 3060';\n    if (n >= 5000) return 'NAS RTX 2060';\n    if (n > 0) return 'GPU local';\n    return 'Sem GPU ativa';\n  }\n  function llm(proc, detail) {\n    var txt = String((detail || '') + ' ' + (proc || '')).toLowerCase();\n    if (txt.indexOf('trailer') >= 0) return 'trailer3d';\n    if (txt.indexOf('toolcall') >= 0 || txt.indexOf('whatsapp') >= 0) return 'whatsapp-toolcall';\n    if (txt.indexOf('trading') >= 0) return 'trading-analyst';\n    if (txt.indexOf('finetune') >= 0 || txt.indexOf('python') >= 0) return 'LLM fine-tune local';\n    return 'não identificado';\n  }\n  function fmtTime(ts) {\n    var n = parseFloat(ts);\n    if (!isFinite(n)) return '--';\n    if (n > 1000000000000) n = n / 1000;\n    return new Date(n * 1000).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });\n  }\n  function approxDuration(samples) {\n    var sec = Math.max(0, parseFloat(samples || 0) * 60);\n    var h = Math.floor(sec / 3600);\n    var m = Math.round((sec % 3600) / 60);\n    if (h) return h + 'h ' + m + 'min';\n    return m + 'min';\n  }\n\n  var grouped = {};\n  rows.forEach(function(r) {\n    var pid = get(r, ['pid', 'PID']);\n    var proc = get(r, ['proc', 'Proc']);\n    var detail = get(r, ['detail', 'Detail']);\n    var vram = get(r, ['vram_mb', 'VRAM MB']);\n    var state = String(get(r, ['state', 'State']) || get(r, ['Value #A', 'Value']) || '0');\n    var key = (pid || proc || detail || 'training') + '|' + vram;\n    if (!grouped[key]) grouped[key] = {pid:pid, proc:proc, detail:detail, vram:vram, states:{}, samples:0, last_ts:get(r, ['Time'])};\n    grouped[key].states[state] = true;\n    grouped[key].pid = pid || grouped[key].pid;\n    grouped[key].proc = proc || grouped[key].proc;\n    grouped[key].detail = detail || grouped[key].detail;\n    grouped[key].vram = vram || grouped[key].vram;\n    grouped[key].last_ts = get(r, ['Time']) || grouped[key].last_ts;\n    var valueB = get(r, ['Value #B']);\n    var value = get(r, ['Value']);\n    grouped[key].samples += parseFloat(valueB || (state === '1' || state === '2' || state === '3' ? value : 0) || 0);\n  });\n  var events = Object.keys(grouped).map(function(k) {\n    var e = grouped[k];\n    if (e.states['1'] && !e.states['2'] && !e.states['3']) e.state = '1';\n    else if (e.states['3']) e.state = '3';\n    else if (e.states['2']) e.state = '2';\n    else e.state = Object.keys(e.states)[0] || '0';\n    return e;\n  }).sort(function(a,b) { return parseFloat(b.last_ts || 0) - parseFloat(a.last_ts || 0); });\n  var current = events.filter(function(e) { return e.state === '1'; }).length;\n  var done = events.filter(function(e) { return e.state === '2'; }).length;\n  var err = events.filter(function(e) { return e.state === '3'; }).length;\n  var html = '<div class=\"thr\"><div class=\"thr-head\"><div><div class=\"thr-title\">Histórico de treinamentos LLM</div>'\n    + '<div class=\"thr-sub\">Janela fixa: últimos 30 dias. O painel ignora o intervalo global do dashboard.</div></div>'\n    + '<div class=\"thr-chip\">Atualizado: ' + esc(fmtTime(Date.now() / 1000)) + '</div></div>'\n    + '<div class=\"thr-meta\"><span>Registros: <b>' + events.length + '</b></span><span>Em andamento: <b class=\"run\">' + current + '</b></span><span>Finalizados: <b class=\"done\">' + done + '</b></span><span>Erros: <b class=\"err\">' + err + '</b></span></div>';\n  html += '<div class=\"thr-section\">Execuções detectadas</div><table><thead><tr><th>Última evidência</th><th>Placa utilizada</th><th>LLM treinado</th><th>Tempo estimado</th><th class=\"num\">VRAM</th><th>Estatística evolutiva do treino</th><th>Status</th></tr></thead><tbody>';\n  events.forEach(function(e) {\n    var c = statusCls(e.state);\n    html += '<tr><td>' + esc(fmtTime(e.last_ts)) + '</td><td>' + esc(placa(e.vram)) + '</td><td>' + esc(llm(e.proc, e.detail)) + '</td><td class=\"num\">' + esc(approxDuration(e.samples)) + '</td><td class=\"num\">' + num(e.vram, 0) + ' MB</td><td>' + esc(e.samples || 0) + ' amostras; pid=' + esc(e.pid || '--') + '; proc=' + esc(e.proc || '--') + '</td><td><span class=\"thr-pill ' + c + '\">' + esc(statusText(e.state)) + '</span></td></tr>';\n  });\n  html += '</tbody></table></div>';\n  return new handlebars.SafeString(html);\n});",
+        "renderMode": "data",
+        "status": "All",
+        "styles": ".thr { font-family: Inter, sans-serif; padding: 10px 12px 16px; color: #d8d9da; height: 100%; overflow: auto; box-sizing: border-box; }\n.thr-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:8px; }\n.thr-title { font-size:16px; font-weight:700; color:#f2f3f5; }\n.thr-sub { color:#9da2a8; font-size:11px; margin-top:2px; }\n.thr-chip { border:1px solid rgba(255,255,255,0.14); border-radius:4px; padding:4px 8px; font-size:11px; white-space:nowrap; color:#c8ccd0; }\n.thr-meta { display:flex; flex-wrap:wrap; gap:8px 16px; color:#bec3c7; font-size:12px; margin:8px 0 12px; }\n.thr-current { display:flex; justify-content:space-between; align-items:center; gap:12px; border:1px solid rgba(79,140,255,0.35); background:rgba(79,140,255,0.10); border-radius:6px; padding:10px 12px; margin:8px 0 12px; }\n.thr-section { font-size:13px; font-weight:700; color:#f2f3f5; margin:12px 0 6px; }\n.thr table { width:100%; border-collapse:collapse; table-layout:auto; font-size:12px; }\n.thr th { color:#bfc3c8; font-weight:700; text-align:left; border-bottom:1px solid rgba(255,255,255,0.12); padding:7px 8px; }\n.thr td { border-bottom:1px solid rgba(255,255,255,0.07); padding:7px 8px; vertical-align:top; }\n.thr .num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }\n.thr-pill { display:inline-block; border-radius:999px; padding:3px 8px; font-size:11px; font-weight:700; white-space:nowrap; }\n.thr-pill.run, .thr .run { color:#8ab8ff; background:rgba(79,140,255,0.14); }\n.thr-pill.done, .thr .done { color:#73bf69; background:rgba(115,191,105,0.14); }\n.thr-pill.err, .thr .err { color:#f2495c; background:rgba(242,73,92,0.14); }\n.thr-pill.idle, .thr .idle { color:#b8bdc3; background:rgba(184,189,195,0.12); }\n.thr-empty { color:#8e8ea0; padding:16px; border:1px dashed rgba(255,255,255,0.12); border-radius:6px; }",
+        "wrap": true
+      },
+      "pluginVersion": "11.5.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "editorMode": "code",
+          "expr": "max_over_time(gpu_coord_training_proc{job=\"ollama-gpu-coordinator\",state!=\"0\"}[30d])",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "{{state}} {{proc}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "editorMode": "code",
+          "expr": "count_over_time(gpu_coord_training_proc{job=\"ollama-gpu-coordinator\",state!=\"0\"}[30d])",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "amostras",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "editorMode": "code",
+          "expr": "gpu_coord_training_proc{job=\"ollama-gpu-coordinator\",state=\"1\"}",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "em andamento",
+          "refId": "C"
+        }
+      ],
+      "title": "📊 Histórico de treinamentos LLM",
+      "type": "marcusolsson-dynamictext-panel"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": [
+    "coordinator",
+    "gpu",
+    "llm",
+    "ollama",
+    "opencode",
+    "trading"
+  ],
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "Ollama GPU Cluster",
+  "uid": "ollama-metrics-cluster",
+  "version": 15,
+  "description": "Cluster Ollama via ollama-gpu-coordinator (:11437). Inclui histórico de treinamentos LLM renderizado em Dynamic Text a partir do Prometheus."
+}
