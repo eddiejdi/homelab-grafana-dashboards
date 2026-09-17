@@ -50,6 +50,9 @@ jobs:
           print(f"✅ {sum(len(fs) for _,_,fs in os.walk('dashboards'))} dashboards validados")
           PYEOF
 
+      - name: Check duplicate uids
+        run: python3 scripts/check_dashboard_uids.py --repo dashboards
+
       - name: Dashboard count summary
         run: |
           echo "### Dashboard Summary" >> $GITHUB_STEP_SUMMARY
