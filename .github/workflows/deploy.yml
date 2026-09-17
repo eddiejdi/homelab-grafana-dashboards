@@ -1,11 +1,6 @@
 name: Deploy Grafana Dashboards
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'dashboards/**'
-      - 'provisioning/**'
   workflow_dispatch:
     inputs:
       full_sync:
