@@ -1306,8 +1306,17 @@
         "type": "prometheus",
         "uid": "dfc0w4yioe4u8e"
       },
+      "description": "1 linha por run de treino (métricas estáveis gpu_coord_training_run_*). Respeita o time range do dashboard. Status: running / done / error.",
       "fieldConfig": {
         "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1318,7 +1327,112 @@
             ]
           }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 110
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "running": {
+                        "text": "🔵 EM ANDAMENTO",
+                        "color": "blue"
+                      },
+                      "done": {
+                        "text": "🟢 FINALIZADO",
+                        "color": "green"
+                      },
+                      "error": {
+                        "text": "🔴 ERRO",
+                        "color": "red"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Duração"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              },
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "VRAM pico"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decmbytes"
+              },
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Início"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              },
+              {
+                "id": "custom.width",
+                "value": 160
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Fim"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              },
+              {
+                "id": "custom.width",
+                "value": 160
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 16,
@@ -1328,46 +1442,43 @@
       },
       "id": 31,
       "options": {
-        "afterRender": "",
-        "content": "{{{training_history_report data.[0]}}}",
-        "contentPartials": [],
-        "defaultContent": "<p style='color:#8e8ea0;padding:16px'>Sem dados de treinamento no intervalo.</p>",
-        "editor": {
-          "format": "auto",
-          "language": "handlebars"
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "countRows": false
         },
-        "editors": [],
-        "externalStyles": [],
-        "helpers": "const handlebars = context.handlebars;\n\nhandlebars.registerHelper('training_history_report', function(rows) {\n  if (!rows || !rows.length) {\n    return new handlebars.SafeString('<p style=\"color:#888;padding:12px\">Sem treinamentos detectados nos últimos 30 dias.</p>');\n  }\n  function esc(v) {\n    if (v === null || v === undefined) return '';\n    return String(v).replace(/[&<>\"']/g, function(c) {\n      return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c];\n    });\n  }\n  function get(r, names) {\n    for (var i = 0; i < names.length; i++) {\n      if (r[names[i]] !== undefined && r[names[i]] !== null) return r[names[i]];\n    }\n    return '';\n  }\n  function num(v, digits) {\n    var n = parseFloat(v || 0);\n    if (!isFinite(n)) n = 0;\n    return n.toFixed(digits);\n  }\n  function statusText(s) {\n    s = String(s || '0');\n    if (s === '1') return 'EM ANDAMENTO';\n    if (s === '2') return 'FINALIZADO';\n    if (s === '3') return 'ERRO';\n    return 'IDLE';\n  }\n  function statusCls(s) {\n    s = String(s || '0');\n    if (s === '1') return 'run';\n    if (s === '2') return 'done';\n    if (s === '3') return 'err';\n    return 'idle';\n  }\n  function placa(vram) {\n    var n = parseFloat(vram || 0);\n    if (n >= 9000) return 'GPU0 RTX 3060';\n    if (n >= 5000) return 'NAS RTX 2060';\n    if (n > 0) return 'GPU local';\n    return 'Sem GPU ativa';\n  }\n  function llm(proc, detail) {\n    var txt = String((detail || '') + ' ' + (proc || '')).toLowerCase();\n    if (txt.indexOf('trailer') >= 0) return 'trailer3d';\n    if (txt.indexOf('toolcall') >= 0 || txt.indexOf('whatsapp') >= 0) return 'whatsapp-toolcall';\n    if (txt.indexOf('trading') >= 0) return 'trading-analyst';\n    if (txt.indexOf('finetune') >= 0 || txt.indexOf('python') >= 0) return 'LLM fine-tune local';\n    return 'não identificado';\n  }\n  function fmtTime(ts) {\n    var n = parseFloat(ts);\n    if (!isFinite(n)) return '--';\n    if (n > 1000000000000) n = n / 1000;\n    return new Date(n * 1000).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });\n  }\n  function approxDuration(samples) {\n    var sec = Math.max(0, parseFloat(samples || 0) * 60);\n    var h = Math.floor(sec / 3600);\n    var m = Math.round((sec % 3600) / 60);\n    if (h) return h + 'h ' + m + 'min';\n    return m + 'min';\n  }\n\n  var grouped = {};\n  rows.forEach(function(r) {\n    var pid = get(r, ['pid', 'PID']);\n    var proc = get(r, ['proc', 'Proc']);\n    var detail = get(r, ['detail', 'Detail']);\n    var vram = get(r, ['vram_mb', 'VRAM MB']);\n    var state = String(get(r, ['state', 'State']) || get(r, ['Value #A', 'Value']) || '0');\n    var key = (pid || proc || detail || 'training') + '|' + vram;\n    if (!grouped[key]) grouped[key] = {pid:pid, proc:proc, detail:detail, vram:vram, states:{}, samples:0, last_ts:get(r, ['Time'])};\n    grouped[key].states[state] = true;\n    grouped[key].pid = pid || grouped[key].pid;\n    grouped[key].proc = proc || grouped[key].proc;\n    grouped[key].detail = detail || grouped[key].detail;\n    grouped[key].vram = vram || grouped[key].vram;\n    grouped[key].last_ts = get(r, ['Time']) || grouped[key].last_ts;\n    var valueB = get(r, ['Value #B']);\n    var value = get(r, ['Value']);\n    grouped[key].samples += parseFloat(valueB || (state === '1' || state === '2' || state === '3' ? value : 0) || 0);\n  });\n  var events = Object.keys(grouped).map(function(k) {\n    var e = grouped[k];\n    if (e.states['1'] && !e.states['2'] && !e.states['3']) e.state = '1';\n    else if (e.states['3']) e.state = '3';\n    else if (e.states['2']) e.state = '2';\n    else e.state = Object.keys(e.states)[0] || '0';\n    return e;\n  }).sort(function(a,b) { return parseFloat(b.last_ts || 0) - parseFloat(a.last_ts || 0); });\n  var current = events.filter(function(e) { return e.state === '1'; }).length;\n  var done = events.filter(function(e) { return e.state === '2'; }).length;\n  var err = events.filter(function(e) { return e.state === '3'; }).length;\n  var html = '<div class=\"thr\"><div class=\"thr-head\"><div><div class=\"thr-title\">Histórico de treinamentos LLM</div>'\n    + '<div class=\"thr-sub\">Janela fixa: últimos 30 dias. O painel ignora o intervalo global do dashboard.</div></div>'\n    + '<div class=\"thr-chip\">Atualizado: ' + esc(fmtTime(Date.now() / 1000)) + '</div></div>'\n    + '<div class=\"thr-meta\"><span>Registros: <b>' + events.length + '</b></span><span>Em andamento: <b class=\"run\">' + current + '</b></span><span>Finalizados: <b class=\"done\">' + done + '</b></span><span>Erros: <b class=\"err\">' + err + '</b></span></div>';\n  html += '<div class=\"thr-section\">Execuções detectadas</div><table><thead><tr><th>Última evidência</th><th>Placa utilizada</th><th>LLM treinado</th><th>Tempo estimado</th><th class=\"num\">VRAM</th><th>Estatística evolutiva do treino</th><th>Status</th></tr></thead><tbody>';\n  events.forEach(function(e) {\n    var c = statusCls(e.state);\n    html += '<tr><td>' + esc(fmtTime(e.last_ts)) + '</td><td>' + esc(placa(e.vram)) + '</td><td>' + esc(llm(e.proc, e.detail)) + '</td><td class=\"num\">' + esc(approxDuration(e.samples)) + '</td><td class=\"num\">' + num(e.vram, 0) + ' MB</td><td>' + esc(e.samples || 0) + ' amostras; pid=' + esc(e.pid || '--') + '; proc=' + esc(e.proc || '--') + '</td><td><span class=\"thr-pill ' + c + '\">' + esc(statusText(e.state)) + '</span></td></tr>';\n  });\n  html += '</tbody></table></div>';\n  return new handlebars.SafeString(html);\n});",
-        "renderMode": "data",
-        "status": "All",
-        "styles": ".thr { font-family: Inter, sans-serif; padding: 10px 12px 16px; color: #d8d9da; height: 100%; overflow: auto; box-sizing: border-box; }\n.thr-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:8px; }\n.thr-title { font-size:16px; font-weight:700; color:#f2f3f5; }\n.thr-sub { color:#9da2a8; font-size:11px; margin-top:2px; }\n.thr-chip { border:1px solid rgba(255,255,255,0.14); border-radius:4px; padding:4px 8px; font-size:11px; white-space:nowrap; color:#c8ccd0; }\n.thr-meta { display:flex; flex-wrap:wrap; gap:8px 16px; color:#bec3c7; font-size:12px; margin:8px 0 12px; }\n.thr-current { display:flex; justify-content:space-between; align-items:center; gap:12px; border:1px solid rgba(79,140,255,0.35); background:rgba(79,140,255,0.10); border-radius:6px; padding:10px 12px; margin:8px 0 12px; }\n.thr-section { font-size:13px; font-weight:700; color:#f2f3f5; margin:12px 0 6px; }\n.thr table { width:100%; border-collapse:collapse; table-layout:auto; font-size:12px; }\n.thr th { color:#bfc3c8; font-weight:700; text-align:left; border-bottom:1px solid rgba(255,255,255,0.12); padding:7px 8px; }\n.thr td { border-bottom:1px solid rgba(255,255,255,0.07); padding:7px 8px; vertical-align:top; }\n.thr .num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }\n.thr-pill { display:inline-block; border-radius:999px; padding:3px 8px; font-size:11px; font-weight:700; white-space:nowrap; }\n.thr-pill.run, .thr .run { color:#8ab8ff; background:rgba(79,140,255,0.14); }\n.thr-pill.done, .thr .done { color:#73bf69; background:rgba(115,191,105,0.14); }\n.thr-pill.err, .thr .err { color:#f2495c; background:rgba(242,73,92,0.14); }\n.thr-pill.idle, .thr .idle { color:#b8bdc3; background:rgba(184,189,195,0.12); }\n.thr-empty { color:#8e8ea0; padding:16px; border:1px dashed rgba(255,255,255,0.12); border-radius:6px; }",
-        "wrap": true
+        "sortBy": [
+          {
+            "displayName": "Início",
+            "desc": true
+          }
+        ]
       },
-      "pluginVersion": "11.5.2",
+      "pluginVersion": "12.4.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "dfc0w4yioe4u8e"
           },
-          "editorMode": "code",
-          "expr": "max_over_time(gpu_coord_training_proc{job=\"ollama-gpu-coordinator\",state!=\"0\"}[30d])",
+          "expr": "gpu_coord_training_run_duration_seconds",
           "format": "table",
           "instant": true,
-          "legendFormat": "{{state}} {{proc}}",
-          "refId": "A"
+          "refId": "A",
+          "legendFormat": "__auto"
         },
         {
           "datasource": {
             "type": "prometheus",
             "uid": "dfc0w4yioe4u8e"
           },
-          "editorMode": "code",
-          "expr": "count_over_time(gpu_coord_training_proc{job=\"ollama-gpu-coordinator\",state!=\"0\"}[30d])",
+          "expr": "gpu_coord_training_run_start_timestamp",
           "format": "table",
           "instant": true,
-          "legendFormat": "amostras",
           "refId": "B"
         },
         {
@@ -1375,16 +1486,138 @@
             "type": "prometheus",
             "uid": "dfc0w4yioe4u8e"
           },
-          "editorMode": "code",
-          "expr": "gpu_coord_training_proc{job=\"ollama-gpu-coordinator\",state=\"1\"}",
+          "expr": "gpu_coord_training_run_end_timestamp",
           "format": "table",
           "instant": true,
-          "legendFormat": "em andamento",
           "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dfc0w4yioe4u8e"
+          },
+          "expr": "gpu_coord_training_run_peak_vram_mb",
+          "format": "table",
+          "instant": true,
+          "refId": "D"
         }
       ],
-      "title": "📊 Histórico de treinamentos LLM",
-      "type": "marcusolsson-dynamictext-panel"
+      "title": "📊 Histórico de treinamentos LLM (1 linha/run)",
+      "transformations": [
+        {
+          "id": "seriesToRows",
+          "options": {}
+        },
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "run_id",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Time 1": true,
+              "Time 2": true,
+              "Time 3": true,
+              "Time 4": true,
+              "__name__": true,
+              "__name__ 1": true,
+              "__name__ 2": true,
+              "__name__ 3": true,
+              "__name__ 4": true,
+              "instance": true,
+              "instance 1": true,
+              "instance 2": true,
+              "instance 3": true,
+              "instance 4": true,
+              "host": true,
+              "service": true,
+              "job 1": true,
+              "job 2": true,
+              "job 3": true,
+              "job 4": true,
+              "proc 1": true,
+              "proc 2": true,
+              "proc 3": true,
+              "proc 4": true,
+              "status 1": true,
+              "status 2": true,
+              "status 3": true,
+              "status 4": true,
+              "gpu 1": true,
+              "gpu 2": true,
+              "gpu 3": true,
+              "gpu 4": true,
+              "run_id 1": true,
+              "run_id 2": true,
+              "run_id 3": true,
+              "run_id 4": true
+            },
+            "renameByName": {
+              "Value": "Duração",
+              "Value #A": "Duração",
+              "Value #B": "Início",
+              "Value #C": "Fim",
+              "Value #D": "VRAM pico",
+              "status": "Status",
+              "job": "LLM / job",
+              "proc": "Processo",
+              "gpu": "GPU",
+              "run_id": "Run ID"
+            },
+            "indexByName": {
+              "Início": 0,
+              "Value #B": 0,
+              "GPU": 1,
+              "gpu": 1,
+              "LLM / job": 2,
+              "job": 2,
+              "Processo": 3,
+              "proc": 3,
+              "Duração": 4,
+              "Value #A": 4,
+              "Value": 4,
+              "VRAM pico": 5,
+              "Value #D": 5,
+              "Status": 6,
+              "status": 6,
+              "Fim": 7,
+              "Value #C": 7,
+              "Run ID": 8,
+              "run_id": 8
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "targetField": "Início",
+                "destinationType": "time"
+              },
+              {
+                "targetField": "Fim",
+                "destinationType": "time"
+              },
+              {
+                "targetField": "Value #B",
+                "destinationType": "time"
+              },
+              {
+                "targetField": "Value #C",
+                "destinationType": "time"
+              }
+            ],
+            "fields": {}
+          }
+        }
+      ],
+      "type": "table"
     }
   ],
   "refresh": "30s",
