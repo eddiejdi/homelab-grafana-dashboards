@@ -1,0 +1,1664 @@
+{
+  "id": 1363378554880000,
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "targets": [
+        {
+          "expr": "sum(ollama_loaded_models{job=\"ollama-gpu-coordinator\"})",
+          "legendFormat": "Total"
+        }
+      ],
+      "title": "Modelos Carregados",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 25
+              }
+            ]
+          },
+          "unit": "GB"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 0
+      },
+      "id": 2,
+      "targets": [
+        {
+          "expr": "sum(ollama_model_ram_mb{job=\"ollama-gpu-coordinator\"}) / 1024",
+          "legendFormat": "GB"
+        }
+      ],
+      "title": "VRAM Usada Total (GB)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "unit": "GB"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 0
+      },
+      "id": 3,
+      "targets": [
+        {
+          "expr": "gpu_coord_vram_free_mb{job=\"ollama-gpu-coordinator\",endpoint=\"gpu0-rtx3060\"} / 1024",
+          "legendFormat": "GB"
+        }
+      ],
+      "title": "VRAM Livre GPU0 (GB)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "unit": "GB"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 0
+      },
+      "id": 4,
+      "targets": [
+        {
+          "expr": "gpu_coord_vram_free_mb{job=\"ollama-gpu-coordinator\",endpoint=\"gpu1-gtx1050\"} / 1024",
+          "legendFormat": "GB"
+        }
+      ],
+      "title": "VRAM Livre GPU1 (GB)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "unit": "GB"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 0
+      },
+      "id": 5,
+      "targets": [
+        {
+          "expr": "gpu_coord_vram_free_mb{job=\"ollama-gpu-coordinator\",endpoint=\"nas-rtx2060\"} / 1024",
+          "legendFormat": "GB"
+        }
+      ],
+      "title": "VRAM Livre NAS (GB)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 2
+              },
+              {
+                "color": "green",
+                "value": 3
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "id": 6,
+      "targets": [
+        {
+          "expr": "sum(gpu_coord_healthy{job=\"ollama-gpu-coordinator\"})",
+          "legendFormat": "Healthy"
+        }
+      ],
+      "title": "Endpoints Saud\u00e1veis",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "id": 100,
+      "title": "OpenCode Hybrid Architecture",
+      "type": "row"
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 5
+      },
+      "id": 101,
+      "options": {
+        "pieType": "donut"
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(ollama_requests_total{job=\"ollama-gpu-coordinator\",model=\"trading-analyst:latest\"}[5m]))",
+          "legendFormat": "Trading"
+        },
+        {
+          "expr": "sum(rate(ollama_requests_total{job=\"ollama-gpu-coordinator\",model=\"llama3.1:8b\"}[5m]))",
+          "legendFormat": "Coding"
+        }
+      ],
+      "title": "Query Distribution (Trading vs Coding)",
+      "type": "piechart"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 5
+      },
+      "id": 102,
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(ollama_request_duration_seconds_bucket{job=\"ollama-gpu-coordinator\",model=\"trading-analyst:latest\"}[5m])) by (le)) * 1000",
+          "legendFormat": "Trading p95"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(ollama_request_duration_seconds_bucket{job=\"ollama-gpu-coordinator\",model=\"llama3.1:8b\"}[5m])) by (le)) * 1000",
+          "legendFormat": "Coding p95"
+        }
+      ],
+      "title": "Latency by Query Type (ms)",
+      "type": "timeseries"
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 5
+      },
+      "id": 103,
+      "targets": [
+        {
+          "expr": "rate(ollama_prompt_tokens_total{job=\"ollama-gpu-coordinator\",model=\"trading-analyst:latest\"}[5m])",
+          "legendFormat": "Trading tok/s"
+        },
+        {
+          "expr": "rate(ollama_prompt_tokens_total{job=\"ollama-gpu-coordinator\",model=\"llama3.1:8b\"}[5m])",
+          "legendFormat": "Coding tok/s"
+        }
+      ],
+      "title": "Tokens/s by Model",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 2
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 13
+      },
+      "id": 104,
+      "targets": [
+        {
+          "expr": "sum(gpu_coord_healthy{job=\"ollama-gpu-coordinator\"})",
+          "legendFormat": "Healthy Endpoints"
+        }
+      ],
+      "title": "Hybrid Architecture Status",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 13
+      },
+      "id": 105,
+      "targets": [
+        {
+          "expr": "ollama_loaded_models{job=\"ollama-gpu-coordinator\",model=\"trading-analyst:latest\"}",
+          "legendFormat": "Trading Warm"
+        }
+      ],
+      "title": "Trading Model Warm Status",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "max": 30,
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 25
+              }
+            ]
+          },
+          "unit": "GB"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 13
+      },
+      "id": 106,
+      "targets": [
+        {
+          "expr": "sum(ollama_model_ram_mb{job=\"ollama-gpu-coordinator\"}) / 1024",
+          "legendFormat": "VRAM Used"
+        }
+      ],
+      "title": "Coordinator VRAM Usage (GB)",
+      "type": "gauge"
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 107,
+      "targets": [
+        {
+          "expr": "sum(rate(gpu_coord_total_requests_served{job=\"ollama-gpu-coordinator\"}[5m])) by (endpoint)",
+          "legendFormat": "{{endpoint}}"
+        }
+      ],
+      "title": "Request Rate by Endpoint (req/s)",
+      "type": "timeseries"
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
+      "id": 108,
+      "targets": [
+        {
+          "expr": "sum(rate(ollama_request_duration_seconds_bucket{job=\"ollama-gpu-coordinator\"}[5m])) by (le)",
+          "legendFormat": "{{le}}"
+        }
+      ],
+      "title": "Latency Distribution (Histogram)",
+      "type": "heatmap"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "unit": "MB"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 25
+      },
+      "id": 11,
+      "targets": [
+        {
+          "expr": "ollama_model_ram_mb{job=\"ollama-gpu-coordinator\"}",
+          "legendFormat": "{{model}} ({{endpoint}})"
+        }
+      ],
+      "title": "VRAM por Modelo (MB)",
+      "type": "barchart"
+    },
+    {
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 25
+      },
+      "id": 12,
+      "targets": [
+        {
+          "expr": "gpu_coord_active_requests{job=\"ollama-gpu-coordinator\",endpoint=\"gpu0-rtx3060\"}",
+          "legendFormat": "GPU0"
+        },
+        {
+          "expr": "gpu_coord_active_requests{job=\"ollama-gpu-coordinator\",endpoint=\"gpu1-gtx1050\"}",
+          "legendFormat": "GPU1"
+        },
+        {
+          "expr": "gpu_coord_active_requests{job=\"ollama-gpu-coordinator\",endpoint=\"nas-rtx2060\"}",
+          "legendFormat": "NAS"
+        }
+      ],
+      "title": "Requisi\u00e7\u00f5es Ativas por GPU",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "id": 200,
+      "title": "Modelo Laya \u2014 System One (DOGE-USDT)",
+      "type": "row"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 34
+      },
+      "id": 201,
+      "targets": [
+        {
+          "expr": "node_systemd_unit_state{job=\"node-exporter\",name=\"laya-serve.service\",state=\"active\"}",
+          "legendFormat": "laya-serve"
+        }
+      ],
+      "title": "Laya Serve (System One)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 34
+      },
+      "id": 202,
+      "targets": [
+        {
+          "expr": "node_systemd_unit_state{job=\"node-exporter\",name=\"crypto-agent@DOGE_USDT_laya.service\",state=\"active\"}",
+          "legendFormat": "crypto-agent"
+        }
+      ],
+      "title": "Agent Laya (DOGE-USDT)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "currencyUSD"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 34
+      },
+      "id": 203,
+      "targets": [
+        {
+          "expr": "btc_trading_equity_usdt{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Equity"
+        }
+      ],
+      "title": "Equity (USDT)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 4,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 34
+      },
+      "id": 204,
+      "targets": [
+        {
+          "expr": "btc_trading_cumulative_pnl{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "PnL"
+        }
+      ],
+      "title": "PnL Acumulado (USDT)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.45
+              },
+              {
+                "color": "green",
+                "value": 0.5
+              }
+            ]
+          },
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 34
+      },
+      "id": 205,
+      "targets": [
+        {
+          "expr": "btc_trading_win_rate{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Win rate"
+        }
+      ],
+      "title": "Win Rate",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 34
+      },
+      "id": 206,
+      "targets": [
+        {
+          "expr": "btc_trading_total_trades{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Trades"
+        }
+      ],
+      "title": "Trades Totais",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "currencyUSD"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 38
+      },
+      "id": 207,
+      "targets": [
+        {
+          "expr": "btc_trading_open_position_usdt{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Posi\u00e7\u00e3o"
+        }
+      ],
+      "title": "Posi\u00e7\u00e3o Aberta (USDT)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 38
+      },
+      "id": 208,
+      "targets": [
+        {
+          "expr": "btc_trading_model_min_confidence{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Min confidence"
+        }
+      ],
+      "title": "Confian\u00e7a M\u00ednima do Modelo",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 3,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0
+              },
+              {
+                "color": "green",
+                "value": 0.3
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 38
+      },
+      "id": 209,
+      "targets": [
+        {
+          "expr": "btc_trading_final_score{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Score"
+        }
+      ],
+      "title": "Score Final (modelo)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 30
+              },
+              {
+                "color": "red",
+                "value": 70
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 38
+      },
+      "id": 210,
+      "targets": [
+        {
+          "expr": "btc_trading_rsi{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "RSI"
+        }
+      ],
+      "title": "RSI (DOGE-USDT)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "unit": "dateTimeAsIso"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 38
+      },
+      "id": 211,
+      "targets": [
+        {
+          "expr": "btc_trading_last_activity_timestamp{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "\u00daltima"
+        }
+      ],
+      "title": "\u00daltima Atividade",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 3
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 38
+      },
+      "id": 212,
+      "targets": [
+        {
+          "expr": "btc_trading_loop_errors_5m{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Erros"
+        }
+      ],
+      "title": "Erros de Loop (5m)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "currencyUSD"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 42
+      },
+      "id": 213,
+      "targets": [
+        {
+          "expr": "btc_trading_equity_usdt{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Equity (USDT)"
+        },
+        {
+          "expr": "btc_trading_cumulative_pnl{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "PnL acumulado (USDT)"
+        }
+      ],
+      "title": "Equity e PnL do Laya",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 42
+      },
+      "id": 214,
+      "targets": [
+        {
+          "expr": "btc_trading_trades_1h{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Trades 1h"
+        },
+        {
+          "expr": "btc_trading_decisions_1h{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Decis\u00f5es 1h"
+        }
+      ],
+      "title": "Atividade do Laya",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 3,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 50
+      },
+      "id": 215,
+      "targets": [
+        {
+          "expr": "btc_trading_final_score{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Score final"
+        },
+        {
+          "expr": "btc_trading_model_buy_threshold{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Threshold compra"
+        },
+        {
+          "expr": "btc_trading_model_sell_threshold{job=\"crypto-exporter-doge_usdt_laya\"}",
+          "legendFormat": "Threshold venda"
+        }
+      ],
+      "title": "Score do Modelo vs Thresholds",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 58
+      },
+      "id": 300,
+      "title": "Laya \u2014 Runtime T\u00e9cnico",
+      "type": "row"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 0,
+        "y": 59
+      },
+      "id": 315,
+      "targets": [
+        {
+          "expr": "laya_serve_up{job=\"laya-exporter\"}",
+          "legendFormat": "laya-serve"
+        }
+      ],
+      "title": "Laya Serve",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 3,
+        "y": 59
+      },
+      "id": 316,
+      "targets": [
+        {
+          "expr": "laya_models_loaded{job=\"laya-exporter\"}",
+          "legendFormat": "Modelos"
+        }
+      ],
+      "title": "Modelos Carregados",
+      "type": "stat"
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 6,
+        "y": 59
+      },
+      "id": 317,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "name"
+      },
+      "targets": [
+        {
+          "expr": "laya_device_info{job=\"laya-exporter\"}",
+          "legendFormat": "{{device}}"
+        }
+      ],
+      "title": "Device",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1
+              },
+              {
+                "color": "red",
+                "value": 3
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 9,
+        "y": 59
+      },
+      "id": 318,
+      "targets": [
+        {
+          "expr": "sum(laya_model_cpu_fallbacks_total{job=\"laya-exporter\"})",
+          "legendFormat": "Fallbacks"
+        }
+      ],
+      "title": "CPU Fallbacks",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "GB"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 12,
+        "y": 59
+      },
+      "id": 319,
+      "targets": [
+        {
+          "expr": "laya_process_resident_memory_bytes{job=\"laya-exporter\"} / 1e9",
+          "legendFormat": "RSS"
+        }
+      ],
+      "title": "RSS (GB)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 15,
+        "y": 59
+      },
+      "id": 320,
+      "targets": [
+        {
+          "expr": "rate(laya_process_cpu_seconds_total{job=\"laya-exporter\"}[5m])",
+          "legendFormat": "CPU"
+        }
+      ],
+      "title": "CPU (cores)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "unit": "dtdurations"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 18,
+        "y": 59
+      },
+      "id": 321,
+      "targets": [
+        {
+          "expr": "laya_unit_uptime_seconds{job=\"laya-exporter\"}",
+          "legendFormat": "Uptime"
+        }
+      ],
+      "title": "Uptime",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 21,
+        "y": 59
+      },
+      "id": 322,
+      "targets": [
+        {
+          "expr": "laya_unit_restarts_total{job=\"laya-exporter\"}",
+          "legendFormat": "Restarts"
+        }
+      ],
+      "title": "Restarts",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.6
+              },
+              {
+                "color": "green",
+                "value": 0.75
+              }
+            ]
+          },
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 63
+      },
+      "id": 323,
+      "targets": [
+        {
+          "expr": "laya_eval_accuracy{job=\"laya-exporter\",stage=\"after\"}",
+          "legendFormat": "Acur\u00e1cia"
+        }
+      ],
+      "title": "Acur\u00e1cia held-out",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 4,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 63
+      },
+      "id": 324,
+      "targets": [
+        {
+          "expr": "laya_eval_loss{job=\"laya-exporter\",stage=\"after\"}",
+          "legendFormat": "Loss"
+        }
+      ],
+      "title": "Loss held-out",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.1
+              },
+              {
+                "color": "red",
+                "value": 0.2
+              }
+            ]
+          },
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 63
+      },
+      "id": 325,
+      "targets": [
+        {
+          "expr": "laya_eval_ece{job=\"laya-exporter\",stage=\"after\"}",
+          "legendFormat": "ECE"
+        }
+      ],
+      "title": "ECE (calibra\u00e7\u00e3o)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 3,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 63
+      },
+      "id": 326,
+      "targets": [
+        {
+          "expr": "laya_eval_brier{job=\"laya-exporter\",stage=\"after\"}",
+          "legendFormat": "Brier"
+        }
+      ],
+      "title": "Brier",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "GB"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 63
+      },
+      "id": 327,
+      "targets": [
+        {
+          "expr": "sum(laya_checkpoint_size_bytes{job=\"laya-exporter\"}) / 1e9",
+          "legendFormat": "Total"
+        }
+      ],
+      "title": "Checkpoints (GB)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 250
+              },
+              {
+                "color": "red",
+                "value": 1000
+              }
+            ]
+          },
+          "unit": "ms"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 63
+      },
+      "id": 328,
+      "targets": [
+        {
+          "expr": "laya_health_latency_seconds{job=\"laya-exporter\"} * 1000",
+          "legendFormat": "Lat\u00eancia"
+        }
+      ],
+      "title": "Lat\u00eancia /health (ms)",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 67
+      },
+      "id": 329,
+      "targets": [
+        {
+          "expr": "rate(laya_process_cpu_seconds_total{job=\"laya-exporter\"}[5m])",
+          "legendFormat": "CPU"
+        }
+      ],
+      "title": "CPU do processo (cores)",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "GB"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 67
+      },
+      "id": 330,
+      "targets": [
+        {
+          "expr": "laya_process_resident_memory_bytes{job=\"laya-exporter\"} / 1e9",
+          "legendFormat": "RSS"
+        }
+      ],
+      "title": "Mem\u00f3ria do processo (GB)",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 1,
+          "unit": "ms"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 67
+      },
+      "id": 331,
+      "targets": [
+        {
+          "expr": "laya_health_latency_seconds{job=\"laya-exporter\"} * 1000",
+          "legendFormat": "health"
+        }
+      ],
+      "title": "Lat\u00eancia /health (ms)",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 1,
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 75
+      },
+      "id": 332,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "targets": [
+        {
+          "expr": "laya_eval_accuracy{job=\"laya-exporter\"}",
+          "instant": true,
+          "legendFormat": "{{stage}}"
+        }
+      ],
+      "title": "Acur\u00e1cia held-out: antes \u2192 depois",
+      "type": "bargauge"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "GB"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 75
+      },
+      "id": 333,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "targets": [
+        {
+          "expr": "laya_checkpoint_size_bytes{job=\"laya-exporter\"} / 1e9",
+          "instant": true,
+          "legendFormat": "{{model}}"
+        }
+      ],
+      "title": "Checkpoint por modelo (GB)",
+      "type": "bargauge"
+    },
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 83
+      },
+      "id": 335,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "name"
+      },
+      "targets": [
+        {
+          "expr": "laya_encoder_info{job=\"laya-exporter\"}",
+          "legendFormat": "{{encoder}}"
+        }
+      ],
+      "title": "Encoder",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 6,
+        "y": 83
+      },
+      "id": 336,
+      "targets": [
+        {
+          "expr": "laya_train_updates{job=\"laya-exporter\"}",
+          "legendFormat": "Updates"
+        }
+      ],
+      "title": "Updates de treino",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "h"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 10,
+        "y": 83
+      },
+      "id": 337,
+      "targets": [
+        {
+          "expr": "laya_train_hours{job=\"laya-exporter\"}",
+          "legendFormat": "Horas"
+        }
+      ],
+      "title": "Horas de treino",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 14,
+        "y": 83
+      },
+      "id": 338,
+      "targets": [
+        {
+          "expr": "laya_train_epochs{job=\"laya-exporter\"}",
+          "legendFormat": "\u00c9pocas"
+        }
+      ],
+      "title": "\u00c9pocas",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 4,
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 18,
+        "y": 83
+      },
+      "id": 339,
+      "targets": [
+        {
+          "expr": "laya_calibration_temperature{job=\"laya-exporter\",question_type=\"choice\"}",
+          "legendFormat": "Temp"
+        }
+      ],
+      "title": "Temp. calibra\u00e7\u00e3o",
+      "type": "stat"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 21,
+        "y": 83
+      },
+      "id": 340,
+      "targets": [
+        {
+          "expr": "laya_abstention_threshold{job=\"laya-exporter\"}",
+          "legendFormat": "Threshold"
+        }
+      ],
+      "title": "Abstention threshold",
+      "type": "stat"
+    }
+  ],
+  "refresh": "10s",
+  "tags": [
+    "ollama",
+    "hybrid",
+    "laya",
+    "laya-technical"
+  ],
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "title": "Ollama GPU Cluster - Hybrid",
+  "uid": "ollama-metrics-hybrid",
+  "version": 5
+}
